@@ -4,25 +4,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-
 namespace TMKOC.Grammer
 {
 
-    public class CavasHandler : MonoBehaviour
-    {
-        void OnEnable()
-        {
-            GameManager.OnLoadLevel += OnLoadLevel;
-        }
 
-        private void OnLoadLevel(int arg0, LevelType arg1)
-        {
-            //Based on level type toggle canvas
-        }
-    }
     public class LevelManager : MonoBehaviour
     {
-        public GrammerState currentGamestate;
+        // public GrammerType currentGamestate;
         public List<Canvas> gameCanvasList;
         public static event Action OnLevelChanged;
 
@@ -34,6 +22,7 @@ namespace TMKOC.Grammer
         private void OnLoadLevel(int arg0, LevelType arg1)
         {
             //Load level
+            // GameManager.Instance.LoadLevel();
         }
 
         public void SetLevel()
@@ -43,22 +32,10 @@ namespace TMKOC.Grammer
 
 
 
-
-
     }
 
 
 
 
-    public enum GrammerState
-    {
-        Adjectives,
-        Articles,
-        Conjunctions,
-        Nouns,
-        Prepostions,
-        Pronouns,
-        Verbs,
-
-    }
+    
 }

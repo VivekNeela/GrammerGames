@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Lean.Touch;
@@ -10,58 +11,24 @@ namespace TMKOC.Grammer
 {
     public class GameManager : SerializedSingleton<GameManager>
     {
+        public int GAME_ID;
         public LevelType currentLevel;
-        public List<LeanSelectableByFinger> wordCards;
-        public List<GameObject> gameCanvasList;
+        public static event Action<int, LevelType> OnLoadLevel;
 
 
-        private void OnEnable()
+    
+        private void Start()
         {
-            LevelManager.OnLevelChanged += SetLevel;
-        }
-
-        private void OnDisable()
-        {
-            LevelManager.OnLevelChanged -= SetLevel;
+            LoadSelection();
         }
 
 
         public void SetLevel()
         {
-            SetCanvas(currentLevel);
+            // SetCanvas(currentLevel);
         }
 
 
-        public void SetCanvas(LevelType level)
-        {
-            switch (level)
-            {
-                case LevelType.Selection:
-                    SetActiveCanvas(0);
-                    break;
-
-                case LevelType.FlashCards:
-                    SetActiveCanvas(1);
-                    break;
-
-                case LevelType.Quiz:
-                    SetActiveCanvas(2);
-                    break;
-
-                default:
-                    break;
-            }
-        }
-
-
-        public void SetActiveCanvas(int level)
-        {
-            foreach (var item in gameCanvasList)
-            {
-                item.SetActive(false);
-            }
-            gameCanvasList[level].SetActive(true);
-        }
 
         void OnNExtBUtton()
         {
@@ -69,23 +36,26 @@ namespace TMKOC.Grammer
         }
 
 
-        private void Update()
-        {
-            // SetLevel();
-        }
 
-        public static UnityAction<int,LevelType> OnLoadLevel;
 
         //Called from UI BUtton
-        public  void LoadLevel(int levelNo, LevelType levelType)
+        public void LoadLevel(int levelNo, LevelType levelType)
         {
+            currentLevel = levelType;
             OnLoadLevel?.Invoke(levelNo, levelType);
         }
 
-        
+        public void LoadSelection() => LoadLevel(0, LevelType.Selection);  //these will be on the btns
+        public void LoadFlashCards() => LoadLevel(1, LevelType.FlashCards);
+        public void LoadQuiz() => LoadLevel(2, LevelType.Quiz);
 
 
     }
+
+
+
+
+
 
     public enum LevelType
     {
