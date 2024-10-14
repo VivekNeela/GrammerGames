@@ -518,7 +518,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 847050314037436838}
         m_TargetAssemblyTypeName: TMKOC.Grammer.Collectable, Assembly-CSharp
-        m_MethodName: ResetCollectablePosition
+        m_MethodName: Deselected
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -571,7 +571,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6926223387954670832}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a45146ec471801c4dbce44f8dd62608f, type: 3}
   m_Name: 

@@ -15,6 +15,8 @@ namespace TMKOC.Grammer
         public GameObject flashCardHandler;
         public RectTransform titleBox;
         public GameObject progressBar;
+        public GameObject nextbtn;
+
         // public TextMeshProUGUI gameTitle;
         // private string gameTitle=""
 
@@ -50,6 +52,7 @@ namespace TMKOC.Grammer
                     EnableWordBasket?.Invoke(false);
                     SetTitleTextAndWidth(GameManager.Instance.grammerType.ToString() + "s", 800);
                     progressBar.SetActive(false);
+                    nextbtn.SetActive(true);
                     break;
 
                 case LevelType.Quiz:
@@ -58,6 +61,11 @@ namespace TMKOC.Grammer
                     EnableWordBasket?.Invoke(true);
                     SetTitleTextAndWidth("Choose the correct " + GameManager.Instance.grammerType.ToString(), 1200);
                     progressBar.SetActive(true);
+                    nextbtn.SetActive(false);
+                    break;
+
+                case LevelType.GameOver:
+                
                     break;
 
                 default:

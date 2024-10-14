@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,18 +12,23 @@ public class LivesManager : MonoBehaviour
     public Sprite heartBg;
     public int currentLives;
 
+    public static event Action ShowNextFlashCards;
+    public static event Action<bool, int> ResetCollectablePos;
+
     private void OnEnable()
     {
         Collector.OnWrongAnswer += ReduceLife;
+        GameManager.OnResetQuiz += ResetLives;
     }
 
     private void OnDisable()
     {
-        Collector.OnWrongAnswer += ReduceLife;
+        Collector.OnWrongAnswer -= ReduceLife;
+        GameManager.OnResetQuiz -= ResetLives;
     }
 
 
-    private void ReduceLife()
+    private void ReduceLife(int index)
     {
         if (currentLives > 0)
             currentLives -= 1;
@@ -34,6 +40,18 @@ public class LivesManager : MonoBehaviour
         for (int i = 0; i < currentLives; i++)
         {
             heartsList[i].sprite = heartFull;
+        }
+        //event to go next ...
+        // ShowNextFlashCards?.Invoke();
+        ResetCollectablePos?.Invoke(true, index);
+    }
+
+    private void ResetLives()
+    {
+        currentLives = 5;
+        foreach (var item in heartsList)
+        {
+            item.sprite = heartFull;
         }
     }
 

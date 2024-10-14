@@ -9,8 +9,8 @@ namespace TMKOC.Grammer
     public class Collector : MonoBehaviour
     {
         public GrammerType collectorGrammerType;
-        public static event Action OnRightAnswer;
-        public static event Action OnWrongAnswer;
+        public static event Action<int> OnRightAnswer;
+        public static event Action<int> OnWrongAnswer;
 
         private void Start()
         {
@@ -24,12 +24,12 @@ namespace TMKOC.Grammer
             if (collectable.grammerType != collectorGrammerType)
             {
                 Debug.Log("<color=red>Wrong answer !!! </color>");
-                OnWrongAnswer?.Invoke();
+                OnWrongAnswer?.Invoke(collectable.Index);
             }
             else
             {
                 Debug.Log("<color=yellow>Right answer !!! </color>");
-                OnRightAnswer?.Invoke();
+                OnRightAnswer?.Invoke(collectable.Index);
 
             }
         }

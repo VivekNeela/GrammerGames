@@ -18,6 +18,7 @@ namespace TMKOC.Grammer
         public GrammerType grammerType;
         public GrammerTypeDataSO grammerTypeDataSO;
         public FlashCardListWrapper currentFlashCardData;
+        public int QuizGamesPlayed;
 
 
         public static event Action<LevelType> OnLoadFlashCards;
@@ -27,8 +28,17 @@ namespace TMKOC.Grammer
         public static event Action<FlashCardListWrapper> SetFlashCardData;
         public static event Action<FlashCardListWrapper> SetQuizCardsData;
         public static event Action ResetFlashCardsIndex;
+        public static event Action OnResetQuiz;
 
-        // public static event Action<bool> SetProgressBarState;
+        private void OnEnable()
+        {
+            FlashCardHandler.OnGameOver += GameOver;
+        }
+
+        private void OnDisable()
+        {
+            FlashCardHandler.OnGameOver -= GameOver;
+        }
 
 
         private void Start()
@@ -39,6 +49,7 @@ namespace TMKOC.Grammer
         public void LoadSelection()   //this is on back btn
         {
             ResetFlashCardsIndex?.Invoke();
+            OnResetQuiz?.Invoke();
             currentLevel = LevelType.Selection;
             OnLoadSelection?.Invoke(currentLevel);
         }
@@ -62,6 +73,17 @@ namespace TMKOC.Grammer
 
             SetQuizCardsData?.Invoke(currentFlashCardData);
 
+            QuizGamesPlayed += 1;
+
+        }
+
+        // private void LoadGameOver
+
+
+        public void GameOver()
+        {
+            LoadSelection();
+            QuizGamesPlayed=0;
         }
 
 
@@ -74,5 +96,6 @@ namespace TMKOC.Grammer
         Selection,
         FlashCards,
         Quiz,
+        GameOver,
     }
 }
