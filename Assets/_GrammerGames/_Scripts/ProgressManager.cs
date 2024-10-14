@@ -7,9 +7,10 @@ using UnityEngine.UI;
 
 public class ProgressManager : MonoBehaviour
 {
-    public Slider progressSlider;
+    public Slider progressBar;
     public List<GameObject> stars;
     public int score;
+    public float sliderValue = 0;
 
     private void OnEnable()
     {
@@ -23,7 +24,7 @@ public class ProgressManager : MonoBehaviour
 
     private void Start()
     {
-        progressSlider = GetComponent<Slider>();
+        progressBar = GetComponent<Slider>();
         ScaleDownStars();
     }
 
@@ -41,9 +42,34 @@ public class ProgressManager : MonoBehaviour
         {
             score += 1;
             ScaleUpStar(score - 1);
+            if (score > 1)
+            {
+                StartCoroutine(IncreaseSliderValue(sliderValue, .5f));
+                sliderValue += .25f;
+            }
+            else
+            {
+                sliderValue += .25f;
+            }
         }
     }
 
     private void ScaleUpStar(int index) => stars[index].transform.DOScale(1, .5f);
+
+
+    IEnumerator IncreaseSliderValue(float targetValue, float duration)
+    {
+        float startValue = progressBar.value;
+        float elapsedTime = 0f;
+
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+            progressBar.value = Mathf.Lerp(startValue, targetValue, elapsedTime / duration);
+            yield return null;
+        }
+        // Ensure slider reaches the target value exactly at the end
+        progressBar.value = targetValue;
+    }
 
 }

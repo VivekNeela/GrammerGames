@@ -12,6 +12,10 @@ namespace TMKOC.Grammer
         public static event Action OnRightAnswer;
         public static event Action OnWrongAnswer;
 
+        private void Start()
+        {
+            collectorGrammerType = GameManager.Instance.grammerType;
+        }
 
         private void OnTriggerEnter2D(Collider2D other)
         {

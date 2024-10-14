@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Lean.Touch;
 using UnityEditor;
 using UnityEngine;
@@ -11,49 +12,60 @@ namespace TMKOC.Grammer
 {
     public class GameManager : SerializedSingleton<GameManager>
     {
+
         public int GAME_ID;
         public LevelType currentLevel;
-        public static event Action<int, LevelType> OnLoadLevel;
+        public GrammerType grammerType;
+        public GrammerTypeDataSO grammerTypeDataSO;
+        public FlashCardListWrapper currentFlashCardData;
 
 
-    
+        public static event Action<LevelType> OnLoadFlashCards;
+        public static event Action<LevelType> OnLoadQuiz;
+        public static event Action<LevelType> OnLoadSelection;
+        public static event Action<bool> SetDraggingState;
+        public static event Action<FlashCardListWrapper> SetFlashCardData;
+        public static event Action<FlashCardListWrapper> SetQuizCardsData;
+        public static event Action ResetFlashCardsIndex;
+
+        // public static event Action<bool> SetProgressBarState;
+
+
         private void Start()
         {
             LoadSelection();
         }
 
-
-        public void SetLevel()
+        public void LoadSelection()   //this is on back btn
         {
-            // SetCanvas(currentLevel);
+            ResetFlashCardsIndex?.Invoke();
+            currentLevel = LevelType.Selection;
+            OnLoadSelection?.Invoke(currentLevel);
         }
 
-
-
-        void OnNExtBUtton()
+        public void LoadFlashCardsLevel(int level)   //this will be on the levels btn...
         {
-            // GameManager.Instance.LoadLevel(1);
+            currentLevel = LevelType.FlashCards;
+            OnLoadFlashCards?.Invoke(currentLevel);
+            SetDraggingState?.Invoke(false);
+            currentFlashCardData = grammerTypeDataSO.flashCardListList[level];
+
+            SetFlashCardData?.Invoke(currentFlashCardData);
         }
 
-
-
-
-        //Called from UI BUtton
-        public void LoadLevel(int levelNo, LevelType levelType)
+        public void LoadQuiz()   //this is on the test quiz btn...
         {
-            currentLevel = levelType;
-            OnLoadLevel?.Invoke(levelNo, levelType);
-        }
+            currentLevel = LevelType.Quiz;
+            OnLoadQuiz?.Invoke(currentLevel);
+            SetDraggingState?.Invoke(true);
+            currentFlashCardData = grammerTypeDataSO.flashCardListList[5];
 
-        public void LoadSelection() => LoadLevel(0, LevelType.Selection);  //these will be on the btns
-        public void LoadFlashCards() => LoadLevel(1, LevelType.FlashCards);
-        public void LoadQuiz() => LoadLevel(2, LevelType.Quiz);
+            SetQuizCardsData?.Invoke(currentFlashCardData);
+
+        }
 
 
     }
-
-
-
 
 
 

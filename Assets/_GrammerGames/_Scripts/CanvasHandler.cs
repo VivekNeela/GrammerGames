@@ -1,42 +1,63 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
+using Sirenix.OdinInspector;
+using TMPro;
+using UnityEditor;
 using UnityEngine;
 
 namespace TMKOC.Grammer
 {
-    public class CavasHandler : MonoBehaviour
+    public class CanvasHandler : MonoBehaviour
     {
         public List<GameObject> gameCanvasList;
+        public GameObject flashCardHandler;
+        public RectTransform titleBox;
+        public GameObject progressBar;
+        // public TextMeshProUGUI gameTitle;
+        // private string gameTitle=""
+
+        public static event Action<bool> EnableWordBasket;
 
         void OnEnable()
         {
-            GameManager.OnLoadLevel += OnLoadLevel;
+            GameManager.OnLoadFlashCards += SetCanvas;
+            GameManager.OnLoadQuiz += SetCanvas;
+            GameManager.OnLoadSelection += SetCanvas;
         }
         private void OnDisable()
         {
-            GameManager.OnLoadLevel += OnLoadLevel;
-        }
-
-        private void OnLoadLevel(int arg0, LevelType arg1)
-        {
-            //Based on level type toggle canvas
+            GameManager.OnLoadFlashCards -= SetCanvas;
+            GameManager.OnLoadQuiz -= SetCanvas;
+            GameManager.OnLoadSelection -= SetCanvas;
         }
 
 
-        public void SetCanvas(LevelType level)
+        private void SetCanvas(LevelType levelType)
         {
-            switch (level)
+            switch (levelType)
             {
                 case LevelType.Selection:
                     SetActiveCanvas(0);
+                    SetActiveFlashCards(false);
+                    EnableWordBasket?.Invoke(false);
                     break;
 
                 case LevelType.FlashCards:
                     SetActiveCanvas(1);
+                    SetActiveFlashCards(true);
+                    EnableWordBasket?.Invoke(false);
+                    SetTitleTextAndWidth(GameManager.Instance.grammerType.ToString() + "s", 800);
+                    progressBar.SetActive(false);
                     break;
 
                 case LevelType.Quiz:
-                    SetActiveCanvas(2);
+                    SetActiveCanvas(1);
+                    SetActiveFlashCards(true);
+                    EnableWordBasket?.Invoke(true);
+                    SetTitleTextAndWidth("Choose the correct " + GameManager.Instance.grammerType.ToString(), 1200);
+                    progressBar.SetActive(true);
                     break;
 
                 default:
@@ -53,6 +74,17 @@ namespace TMKOC.Grammer
             }
             gameCanvasList[level].SetActive(true);
         }
+
+        private void SetActiveFlashCards(bool state) => flashCardHandler.SetActive(state);
+
+
+        private void SetTitleTextAndWidth(string titleText, int width)
+        {
+            titleBox.GetComponentInChildren<TextMeshProUGUI>().text = titleText;
+            var size = new Vector2(width, titleBox.sizeDelta.y);
+            titleBox.DOSizeDelta(size, 0);
+        }
+
 
 
     }
