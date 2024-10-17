@@ -10,6 +10,8 @@ public class ProgressManager : MonoBehaviour
 {
     public Slider progressBar;
     public List<GameObject> stars;
+    public int maxScore;
+    [SerializeField] private float tempScore;
     public int score;
     public float sliderValue = 0;
     public static event Action ShowNextFlashCards;
@@ -19,12 +21,15 @@ public class ProgressManager : MonoBehaviour
     private void OnEnable()
     {
         Collector.OnRightAnswer += GiveStar;
+        Collector.AddPoints += AddScore;
         GameManager.OnResetQuiz += ResetProgress;
+
     }
 
     private void OnDisable()
     {
         Collector.OnRightAnswer -= GiveStar;
+        Collector.AddPoints -= AddScore;
         GameManager.OnResetQuiz -= ResetProgress;
     }
 
@@ -32,6 +37,7 @@ public class ProgressManager : MonoBehaviour
     {
         progressBar = GetComponent<Slider>();
         ScaleDownStars();
+        maxScore = GameManager.Instance.cardType == CardType.FlashCard ? 5 : 10;
     }
 
     private void ScaleDownStars()
@@ -42,13 +48,16 @@ public class ProgressManager : MonoBehaviour
         }
     }
 
+    //suppose the max score is 10 we will add 2 points every time we call give star.
     private void GiveStar(int index)
     {
-        if (score < 5)
+        if (score < maxScore)
         {
-            score += 1;
-            ScaleUpStar(score - 1);
-            if (score > 1)
+            score += maxScore / 5;
+            int starIndex = GameManager.Instance.cardType == CardType.FlashCard ? score - 1 : (score / 2) - 1;
+            
+            ScaleUpStar(starIndex);
+            if (score > maxScore / 5)
             {
                 StartCoroutine(IncreaseSliderValue(sliderValue, .5f));
                 sliderValue += .25f;
@@ -88,5 +97,30 @@ public class ProgressManager : MonoBehaviour
         sliderValue = 0;
         ScaleDownStars();
     }
+
+    private void AddScore(float _tempScore, int index)
+    {
+        tempScore += _tempScore;
+        if (IsWholeNumber(tempScore))
+        {
+            Debug.Log("<color=green> tempscore is whole number we can give star !!!</color>");
+            //dont need to invoke this event cuz it is already being invoked in give star() 
+            // ResetCollectablePos?.Invoke(true, index);
+            GiveStar(index);
+            //show next cards also...
+        }
+        else
+        {
+            ResetCollectablePos?.Invoke(false, index);
+            //dont show next cards...
+        }
+    }
+
+    public bool IsWholeNumber(float num)
+    {
+        return num % 1 == 0;
+    }
+
+
 
 }

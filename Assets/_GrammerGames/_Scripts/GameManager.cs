@@ -16,7 +16,9 @@ namespace TMKOC.Grammer
         public int GAME_ID;
         public LevelType currentLevel;
         public GrammerType grammerType;
+        public CardType cardType;
         public GrammerTypeDataSO grammerTypeDataSO;
+        // public  GrammerFlashCardsSO grammerTypeDataSO;
         public FlashCardListWrapper currentFlashCardData;
         public int QuizGamesPlayed;
 
@@ -24,6 +26,7 @@ namespace TMKOC.Grammer
         public static event Action<LevelType> OnLoadFlashCards;
         public static event Action<LevelType> OnLoadQuiz;
         public static event Action<LevelType> OnLoadSelection;
+        public static event Action<LevelType> OnGameOver;
         public static event Action<bool> SetDraggingState;
         public static event Action<FlashCardListWrapper> SetFlashCardData;
         public static event Action<FlashCardListWrapper> SetQuizCardsData;
@@ -52,6 +55,7 @@ namespace TMKOC.Grammer
             OnResetQuiz?.Invoke();
             currentLevel = LevelType.Selection;
             OnLoadSelection?.Invoke(currentLevel);
+            QuizGamesPlayed = 0;
         }
 
         public void LoadFlashCardsLevel(int level)   //this will be on the levels btn...
@@ -59,31 +63,47 @@ namespace TMKOC.Grammer
             currentLevel = LevelType.FlashCards;
             OnLoadFlashCards?.Invoke(currentLevel);
             SetDraggingState?.Invoke(false);
-            currentFlashCardData = grammerTypeDataSO.flashCardListList[level];
+            currentFlashCardData = grammerTypeDataSO.flashCardNestedList[level];
 
             SetFlashCardData?.Invoke(currentFlashCardData);
         }
+
+        // public void LoadWordCardsLevel(int level)
+        // {
+        //     currentLevel = LevelType.FlashCards;
+        //     OnLoadFlashCards?.Invoke(currentLevel);
+        //     SetDraggingState?.Invoke(false);
+        //     currentFlashCardData=grammerTypeDataSO.flashCardNestedList[level];
+
+        //     SetWordCardData?.Invoke(currentFlashCardData);
+        // }
+
 
         public void LoadQuiz()   //this is on the test quiz btn...
         {
             currentLevel = LevelType.Quiz;
             OnLoadQuiz?.Invoke(currentLevel);
             SetDraggingState?.Invoke(true);
-            currentFlashCardData = grammerTypeDataSO.flashCardListList[5];
 
+            if (cardType == CardType.FlashCard)
+                grammerTypeDataSO.SetNestedListQuizFlashCards();   //this function is for flash cards
+            else
+                grammerTypeDataSO.SetNestedListQuizWordCards();   //this function is for word cards
+
+            currentFlashCardData = grammerTypeDataSO.flashCardNestedList[5];  //last element is quiz cards
+            
             SetQuizCardsData?.Invoke(currentFlashCardData);
-
             QuizGamesPlayed += 1;
 
         }
 
-        // private void LoadGameOver
-
 
         public void GameOver()
         {
-            LoadSelection();
-            QuizGamesPlayed=0;
+            currentLevel = LevelType.GameOver;
+            OnResetQuiz?.Invoke();
+            OnGameOver?.Invoke(currentLevel);
+            QuizGamesPlayed = 0;
         }
 
 

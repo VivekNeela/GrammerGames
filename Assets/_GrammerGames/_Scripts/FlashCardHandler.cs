@@ -14,18 +14,17 @@ namespace TMKOC.Grammer
         private FlashCardListWrapper flashCardListWrapper;   //this will set all the flash cards data
         public List<FlashCardData> flashCardDatas;
         public List<Collectable> flashCards;
+        public List<Collectable> wordCards;
+
         public GameObject wordBasket;
         public static event Action<string, Sprite, GrammerType, int> SetFlashCardData;
         public static event Action OnGameOver;
-        // public bool cardsMoving;
-        // public bool cardsPosReset;
 
 
         private void OnEnable()
         {
             Collectable.OnSelected += SelectedCard;
             Collectable.OnDeselected += DeselectedCard;
-            CanvasHandler.EnableWordBasket += SetActiveWordBasket;
             GameManager.SetFlashCardData += SetFlashCardDataList;
             GameManager.SetQuizCardsData += SetFlashCardDataList;
             GameManager.ResetFlashCardsIndex += ResetFlashCardsIndex;
@@ -40,7 +39,6 @@ namespace TMKOC.Grammer
         {
             Collectable.OnSelected -= SelectedCard;
             Collectable.OnDeselected -= DeselectedCard;
-            CanvasHandler.EnableWordBasket -= SetActiveWordBasket;
             GameManager.SetFlashCardData -= SetFlashCardDataList;
             GameManager.SetQuizCardsData -= SetFlashCardDataList;
             GameManager.ResetFlashCardsIndex -= ResetFlashCardsIndex;
@@ -62,19 +60,28 @@ namespace TMKOC.Grammer
 
         private void SelectedCard(int index)
         {
-            // cardsMoving = true;
             Debug.Log("selected ::" + index);
 
-            foreach (var item in flashCards)
+            if (GameManager.Instance.cardType == CardType.FlashCard)
+                SetCardsProperties(flashCards);
+            else
+                SetCardsProperties(wordCards);
+
+
+            void SetCardsProperties(List<Collectable> cardsList)
             {
-                item.BoxCollider.isTrigger = true;
-                item.SortingGroup.sortingOrder = 0;
-                item.TextCanvas.sortingOrder = 0;
+                foreach (var item in cardsList)
+                {
+                    item.BoxCollider.isTrigger = true;
+                    item.SortingGroup.sortingOrder = 0;
+                    item.TextCanvas.sortingOrder = 0;
+                }
+                cardsList[index].BoxCollider.isTrigger = false;
+                cardsList[index].SortingGroup.sortingOrder = 1;
+                cardsList[index].TextCanvas.sortingOrder = 1;
             }
-            flashCards[index].BoxCollider.isTrigger = false;
-            flashCards[index].SortingGroup.sortingOrder = 1;
-            flashCards[index].TextCanvas.sortingOrder = 1;
         }
+
 
         private void DeselectedCard(int index)
         {
@@ -88,41 +95,50 @@ namespace TMKOC.Grammer
             this.flashCardListWrapper = flashCardListWrapper;
             flashCardDatas = flashCardListWrapper.listOfFlashCards;
 
-            for (int i = 0; i < flashCards.Count; i++)
+            if (GameManager.Instance.cardType == CardType.FlashCard)
             {
-                var data = flashCardDatas[i];
-                SetFlashCardData?.Invoke(data.word, data.image, data.grammerType, i);
+                for (int i = 0; i < flashCards.Count; i++)
+                {
+                    var data = flashCardDatas[i];
+                    SetFlashCardData?.Invoke(data.word, data.image, data.grammerType, i);
+                }
+            }
+            else
+            {
+                Debug.Log("word cards selected...");
+                for (int i = 0; i < wordCards.Count; i++)
+                {
+                    var data = flashCardDatas[i];
+                    SetFlashCardData?.Invoke(data.word, data.image, data.grammerType, i);
+                }
             }
         }
 
 
-        // public void SetFlashCardDataLoop()
-        // {
-        //     if (flashCardDatas.Count < 6) return;
-        //     for (int i = 3; i < GameManager.Instance.currentFlashCardData.listOfFlashCards.Count; i++)   //cuz only 3 flash cards at once...
-        //     {
-        //         var data = GameManager.Instance.currentFlashCardData.listOfFlashCards[i];
-        //         flashCards[i - 3].Index = i;
-        //         Debug.Log("name:: " + data.word);
-        //         SetFlashCardData?.Invoke(data.word, data.image, data.grammerType, i);
-        //     }
-        // }
 
 
         public int chunkIndex = 1;
         public void NextBtnLoop()
         {
-            int startIndex = chunkIndex * 3;
+            int cardCount = 0;
+
+            if (GameManager.Instance.cardType == CardType.FlashCard)
+                cardCount = 3;
+            else
+                cardCount = 5;
+
+
+            int startIndex = chunkIndex * cardCount;
 
             if (startIndex < flashCardDatas.Count)
             {
 
-                var chunk = flashCardDatas.GetRange(startIndex, Mathf.Min(3, flashCardDatas.Count - startIndex));
+                var chunk = flashCardDatas.GetRange(startIndex, Mathf.Min(cardCount, flashCardDatas.Count - startIndex));
 
                 Debug.Log("chunk data is :: " + chunk[0].word);
 
                 //assign data to the falsh cards...
-                for (int i = 0; i < 3; i++)
+                for (int i = 0; i < cardCount; i++)
                 {
                     var data = chunk[i];
                     SetFlashCardData?.Invoke(data.word, data.image, data.grammerType, i);
@@ -174,6 +190,8 @@ namespace TMKOC.Grammer
             }
             NextBtnLoop();
         }
+
+
 
 
 

@@ -17,8 +17,8 @@ namespace TMKOC.Grammer
         [SerializeField] private int index;
         public int Index { get => index; set => index = value; }
         public GrammerType grammerType;
-        // public string word;
-        // public Sprite image;
+        public CardType cardType;
+
         #endregion
 
         #region Privates and Properties
@@ -108,15 +108,24 @@ namespace TMKOC.Grammer
         private void OnReset(bool showNext, int _index)
         {
             // Debug.Log("<color=yellow>card pos was reset...</color>");
-            SetLeanDragState(true);
+            if (GameManager.Instance.currentLevel == LevelType.Quiz)
+                SetLeanDragState(true);
+            else
+                SetLeanDragState(false);
+
             //if show next true invoke an event that tells flashcard handler to show next cards...
             if (_index == index && showNext)
             {
-                // Debug.Log("<color=green>now we need to show next cards...,</color>");
                 ShowNextCards?.Invoke();
             }
         }
 
+    }
+
+    public enum CardType
+    {
+        FlashCard,
+        WordCard,
     }
 
 }

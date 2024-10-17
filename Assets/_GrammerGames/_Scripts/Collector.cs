@@ -11,6 +11,8 @@ namespace TMKOC.Grammer
         public GrammerType collectorGrammerType;
         public static event Action<int> OnRightAnswer;
         public static event Action<int> OnWrongAnswer;
+        public static event Action<float, int> AddPoints;
+
 
         private void Start()
         {
@@ -23,16 +25,23 @@ namespace TMKOC.Grammer
             var collectable = other.gameObject.GetComponent<Collectable>();
             if (collectable.grammerType != collectorGrammerType)
             {
-                Debug.Log("<color=red>Wrong answer !!! </color>");
+                Debug.Log("<color=red> Wrong answer !!! </color>");
+
                 OnWrongAnswer?.Invoke(collectable.Index);
             }
             else
             {
-                Debug.Log("<color=yellow>Right answer !!! </color>");
-                OnRightAnswer?.Invoke(collectable.Index);
+                Debug.Log("<color=yellow> Right answer !!! </color>");
+
+                if (collectable.cardType == CardType.FlashCard)
+                    OnRightAnswer?.Invoke(collectable.Index);
+                else
+                    AddPoints?.Invoke(.5f, collectable.Index);
+
 
             }
         }
+
 
 
     }

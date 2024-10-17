@@ -1,0 +1,404 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6cf6ae19f761848b9bd81fb14f5ffd04, type: 3}
+  m_Name: AdjectivesData
+  m_EditorClassIdentifier: 
+  Level_1_FlashCards:
+  - word: Big
+    image: {fileID: 0}
+    grammerType: 0
+  - word: Small
+    image: {fileID: 0}
+    grammerType: 0
+  - word: Happy
+    image: {fileID: 0}
+    grammerType: 0
+  - word: Sad
+    image: {fileID: 0}
+    grammerType: 0
+  - word: Hot
+    image: {fileID: 0}
+    grammerType: 0
+  Level_2_FlashCards:
+  - word: Rough
+    image: {fileID: 0}
+    grammerType: 0
+  - word: Shiny
+    image: {fileID: 0}
+    grammerType: 0
+  - word: Heavy
+    image: {fileID: 0}
+    grammerType: 0
+  - word: Bouncy
+    image: {fileID: 0}
+    grammerType: 0
+  - word: Hard
+    image: {fileID: 0}
+    grammerType: 0
+  Level_3_FlashCards:
+  - word: Tall
+    image: {fileID: 0}
+    grammerType: 0
+  - word: Short
+    image: {fileID: 0}
+    grammerType: 0
+  - word: Clean
+    image: {fileID: 0}
+    grammerType: 0
+  - word: Dirty
+    image: {fileID: 0}
+    grammerType: 0
+  - word: Soft
+    image: {fileID: 0}
+    grammerType: 0
+  Level_4_FlashCards:
+  - word: Loud
+    image: {fileID: 0}
+    grammerType: 0
+  - word: Quiet
+    image: {fileID: 0}
+    grammerType: 0
+  - word: Bright
+    image: {fileID: 0}
+    grammerType: 0
+  - word: Dark
+    image: {fileID: 0}
+    grammerType: 0
+  - word: Strong
+    image: {fileID: 0}
+    grammerType: 0
+  Level_5_FlashCards:
+  - word: Round
+    image: {fileID: 0}
+    grammerType: 0
+  - word: Flat
+    image: {fileID: 0}
+    grammerType: 0
+  - word: Sweet
+    image: {fileID: 0}
+    grammerType: 0
+  - word: Sour
+    image: {fileID: 0}
+    grammerType: 0
+  - word: Thick
+    image: {fileID: 0}
+    grammerType: 0
+  flashCardNestedList:
+  - listOfFlashCards:
+    - word: Big
+      image: {fileID: 0}
+      grammerType: 0
+    - word: Small
+      image: {fileID: 0}
+      grammerType: 0
+    - word: Happy
+      image: {fileID: 0}
+      grammerType: 0
+    - word: Sad
+      image: {fileID: 0}
+      grammerType: 0
+    - word: Hot
+      image: {fileID: 0}
+      grammerType: 0
+  - listOfFlashCards:
+    - word: Rough
+      image: {fileID: 0}
+      grammerType: 0
+    - word: Shiny
+      image: {fileID: 0}
+      grammerType: 0
+    - word: Heavy
+      image: {fileID: 0}
+      grammerType: 0
+    - word: Bouncy
+      image: {fileID: 0}
+      grammerType: 0
+    - word: Hard
+      image: {fileID: 0}
+      grammerType: 0
+  - listOfFlashCards:
+    - word: Tall
+      image: {fileID: 0}
+      grammerType: 0
+    - word: Short
+      image: {fileID: 0}
+      grammerType: 0
+    - word: Clean
+      image: {fileID: 0}
+      grammerType: 0
+    - word: Dirty
+      image: {fileID: 0}
+      grammerType: 0
+    - word: Soft
+      image: {fileID: 0}
+      grammerType: 0
+  - listOfFlashCards:
+    - word: Loud
+      image: {fileID: 0}
+      grammerType: 0
+    - word: Quiet
+      image: {fileID: 0}
+      grammerType: 0
+    - word: Bright
+      image: {fileID: 0}
+      grammerType: 0
+    - word: Dark
+      image: {fileID: 0}
+      grammerType: 0
+    - word: Strong
+      image: {fileID: 0}
+      grammerType: 0
+  - listOfFlashCards:
+    - word: Round
+      image: {fileID: 0}
+      grammerType: 0
+    - word: Flat
+      image: {fileID: 0}
+      grammerType: 0
+    - word: Sweet
+      image: {fileID: 0}
+      grammerType: 0
+    - word: Sour
+      image: {fileID: 0}
+      grammerType: 0
+    - word: Thick
+      image: {fileID: 0}
+      grammerType: 0
+  - listOfFlashCards:
+    - word: Short
+      image: {fileID: 0}
+      grammerType: 0
+    - word: Bouncy
+      image: {fileID: 0}
+      grammerType: 0
+    - word: Book
+      image: {fileID: 0}
+      grammerType: 3
+    - word: Tree
+      image: {fileID: 0}
+      grammerType: 3
+    - word: Dog
+      image: {fileID: 0}
+      grammerType: 3
+    - word: Heavy
+      image: {fileID: 0}
+      grammerType: 0
+    - word: River
+      image: {fileID: 0}
+      grammerType: 3
+    - word: Train
+      image: {fileID: 0}
+      grammerType: 3
+    - word: Chair
+      image: {fileID: 0}
+      grammerType: 3
+    - word: Hot
+      image: {fileID: 0}
+      grammerType: 0
+    - word: Ball
+      image: {fileID: 0}
+      grammerType: 3
+    - word: Sour
+      image: {fileID: 0}
+      grammerType: 0
+    - word: Apple
+      image: {fileID: 0}
+      grammerType: 3
+    - word: House
+      image: {fileID: 0}
+      grammerType: 3
+    - word: Tall
+      image: {fileID: 0}
+      grammerType: 0
+    - word: Happy
+      image: {fileID: 0}
+      grammerType: 0
+    - word: Bird
+      image: {fileID: 0}
+      grammerType: 3
+    - word: Sky
+      image: {fileID: 0}
+      grammerType: 3
+    - word: Boat
+      image: {fileID: 0}
+      grammerType: 3
+    - word: Flat
+      image: {fileID: 0}
+      grammerType: 0
+    - word: Cup
+      image: {fileID: 0}
+      grammerType: 3
+    - word: Bread
+      image: {fileID: 0}
+      grammerType: 3
+    - word: Clean
+      image: {fileID: 0}
+      grammerType: 0
+    - word: Loud
+      image: {fileID: 0}
+      grammerType: 0
+    - word: Pencil
+      image: {fileID: 0}
+      grammerType: 3
+  correctFlashCardList:
+  - word: Short
+    image: {fileID: 0}
+    grammerType: 0
+  - word: Bouncy
+    image: {fileID: 0}
+    grammerType: 0
+  - word: Heavy
+    image: {fileID: 0}
+    grammerType: 0
+  - word: Hot
+    image: {fileID: 0}
+    grammerType: 0
+  - word: Tall
+    image: {fileID: 0}
+    grammerType: 0
+  - word: Sour
+    image: {fileID: 0}
+    grammerType: 0
+  - word: Happy
+    image: {fileID: 0}
+    grammerType: 0
+  - word: Flat
+    image: {fileID: 0}
+    grammerType: 0
+  - word: Loud
+    image: {fileID: 0}
+    grammerType: 0
+  - word: Clean
+    image: {fileID: 0}
+    grammerType: 0
+  incorrectWords:
+  - word: Dog
+    image: {fileID: 0}
+    grammerType: 3
+  - word: Tree
+    image: {fileID: 0}
+    grammerType: 3
+  - word: Book
+    image: {fileID: 0}
+    grammerType: 3
+  - word: Train
+    image: {fileID: 0}
+    grammerType: 3
+  - word: River
+    image: {fileID: 0}
+    grammerType: 3
+  - word: Chair
+    image: {fileID: 0}
+    grammerType: 3
+  - word: Apple
+    image: {fileID: 0}
+    grammerType: 3
+  - word: House
+    image: {fileID: 0}
+    grammerType: 3
+  - word: Ball
+    image: {fileID: 0}
+    grammerType: 3
+  - word: Bird
+    image: {fileID: 0}
+    grammerType: 3
+  - word: Boat
+    image: {fileID: 0}
+    grammerType: 3
+  - word: Sky
+    image: {fileID: 0}
+    grammerType: 3
+  - word: Cup
+    image: {fileID: 0}
+    grammerType: 3
+  - word: Bread
+    image: {fileID: 0}
+    grammerType: 3
+  - word: Pencil
+    image: {fileID: 0}
+    grammerType: 3
+  RandomQuizCards:
+  - word: Short
+    image: {fileID: 0}
+    grammerType: 0
+  - word: Bouncy
+    image: {fileID: 0}
+    grammerType: 0
+  - word: Book
+    image: {fileID: 0}
+    grammerType: 3
+  - word: Tree
+    image: {fileID: 0}
+    grammerType: 3
+  - word: Dog
+    image: {fileID: 0}
+    grammerType: 3
+  - word: Heavy
+    image: {fileID: 0}
+    grammerType: 0
+  - word: River
+    image: {fileID: 0}
+    grammerType: 3
+  - word: Train
+    image: {fileID: 0}
+    grammerType: 3
+  - word: Chair
+    image: {fileID: 0}
+    grammerType: 3
+  - word: Hot
+    image: {fileID: 0}
+    grammerType: 0
+  - word: Ball
+    image: {fileID: 0}
+    grammerType: 3
+  - word: Sour
+    image: {fileID: 0}
+    grammerType: 0
+  - word: Apple
+    image: {fileID: 0}
+    grammerType: 3
+  - word: House
+    image: {fileID: 0}
+    grammerType: 3
+  - word: Tall
+    image: {fileID: 0}
+    grammerType: 0
+  - word: Happy
+    image: {fileID: 0}
+    grammerType: 0
+  - word: Bird
+    image: {fileID: 0}
+    grammerType: 3
+  - word: Sky
+    image: {fileID: 0}
+    grammerType: 3
+  - word: Boat
+    image: {fileID: 0}
+    grammerType: 3
+  - word: Flat
+    image: {fileID: 0}
+    grammerType: 0
+  - word: Cup
+    image: {fileID: 0}
+    grammerType: 3
+  - word: Bread
+    image: {fileID: 0}
+    grammerType: 3
+  - word: Clean
+    image: {fileID: 0}
+    grammerType: 0
+  - word: Loud
+    image: {fileID: 0}
+    grammerType: 0
+  - word: Pencil
+    image: {fileID: 0}
+    grammerType: 3
