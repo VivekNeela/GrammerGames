@@ -13,7 +13,7 @@ public class LivesManager : MonoBehaviour
     public int currentLives;
 
     public static event Action ShowNextFlashCards;
-    public static event Action<bool, int> ResetCollectablePos;
+    public static event Action<bool, int, bool> ResetCollectablePos;
 
     private void OnEnable()
     {
@@ -43,7 +43,7 @@ public class LivesManager : MonoBehaviour
         }
         //event to go next ...
         // ShowNextFlashCards?.Invoke();
-        ResetCollectablePos?.Invoke(true, index);
+        ResetCollectablePos?.Invoke(true, index, true);
     }
 
     private void ResetLives()

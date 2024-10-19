@@ -33,6 +33,7 @@ namespace TMKOC.Grammer
         public Canvas TextCanvas { get => textCanvas; set => textCanvas = value; }
 
         [SerializeField] private LeanDragTranslate leanDragTranslate;
+        [SerializeField] private SpriteRenderer cardSpriteRenderer;   //image
         [SerializeField] private SpriteRenderer imageSpriteRenderer;   //image
         [SerializeField] private TextMeshProUGUI tmpText;   //word
         private Vector2 initialPos;
@@ -51,6 +52,13 @@ namespace TMKOC.Grammer
             FlashCardHandler.SetFlashCardData += SetFlashCardData;
             ProgressManager.ResetCollectablePos += ResetCollectablePosition;
             LivesManager.ResetCollectablePos += ResetCollectablePosition;
+            FlashCardHandler.EnableCardsDragging += SetLeanDragState;
+
+            FlashCardHandler.ResetCollectablePos += ResetCollectablePosition;
+
+            GameManager.PlayCardTransition += PlayCardTransition;
+
+            FlashCardHandler.OnNextButtonClicked += OnNextButtonClicked;
         }
 
 
@@ -60,6 +68,13 @@ namespace TMKOC.Grammer
             FlashCardHandler.SetFlashCardData -= SetFlashCardData;
             ProgressManager.ResetCollectablePos -= ResetCollectablePosition;
             LivesManager.ResetCollectablePos -= ResetCollectablePosition;
+            FlashCardHandler.EnableCardsDragging -= SetLeanDragState;
+
+            FlashCardHandler.ResetCollectablePos -= ResetCollectablePosition;
+
+            GameManager.PlayCardTransition -= PlayCardTransition;
+
+            FlashCardHandler.OnNextButtonClicked -= OnNextButtonClicked;
         }
 
         private void Awake()
@@ -74,10 +89,13 @@ namespace TMKOC.Grammer
             InitialPos = transform.position;
         }
 
-        public void ResetCollectablePosition(bool showNext, int _index)   //this is also on the on deselected event on the lean selectable by finger...
+        public void ResetCollectablePosition(bool showNext, int _index, bool destroy)   //this is also on the on deselected event on the lean selectable by finger...
         {
             SetLeanDragState(false);
-            transform.DOMove(InitialPos, .5f).OnComplete(() => { OnReset(showNext, _index); });
+            transform.DOMove(InitialPos, .5f).OnComplete(() =>
+            {
+                OnReset(showNext, _index, destroy);
+            });
         }
 
         public void Selected()  //this function is on the On Selected event of Lean Selectable by finger.
@@ -88,7 +106,7 @@ namespace TMKOC.Grammer
         public void Deselected()  //this function is on the On Deselected event of Lean Selectable by finger. 
         {
             OnDeselected?.Invoke(Index);
-            ResetCollectablePosition(false, index);
+            ResetCollectablePosition(false, index, false);
         }
 
         private void SetLeanDragState(bool state) => leanDragTranslate.enabled = state;
@@ -103,22 +121,66 @@ namespace TMKOC.Grammer
             }
             else
                 return;
+
         }
 
-        private void OnReset(bool showNext, int _index)
+        private void OnNextButtonClicked(string word, Sprite image, GrammerType grammer, int _index)
         {
+            Vector3 defaultScale = transform.localScale;
+            transform.DOScale(0, 1).OnComplete(() =>
+            {
+                
+                SetFlashCardData(word, image, grammer, _index);
+                transform.DOScale(defaultScale.x, 1);
+            });
+        }
+
+        private void OnReset(bool showNext, int _index, bool destroy)
+        {
+            // if (gameObject.activeSelf && showNext)
+            //     PlayCardTransition(0, 0.8f);
+
             // Debug.Log("<color=yellow>card pos was reset...</color>");
             if (GameManager.Instance.currentLevel == LevelType.Quiz)
                 SetLeanDragState(true);
             else
                 SetLeanDragState(false);
 
-            //if show next true invoke an event that tells flashcard handler to show next cards...
-            if (_index == index && showNext)
+            //OG CODE
+            // if show next true invoke an event that tells flashcard handler to show next cards...
+            if (_index == index && showNext && destroy)
             {
+                Debug.Log("<color=yellow> Destroy card and show Next!!! </color>");
                 ShowNextCards?.Invoke();
+                // StartCoroutine(GoNext(() =>
+                // {
+                //     ShowNextCards?.Invoke();
+                // }));
             }
+            if (_index == index && destroy)
+            {
+                Debug.Log("<color=yellow> Destroy card!!! </color>");
+            }
+
         }
+
+        private IEnumerator GoNext(Action callback)
+        {
+            PlayCardTransition(0, 0.8f);
+            yield return new WaitForEndOfFrame();
+            callback?.Invoke();
+        }
+
+        private void PlayCardTransition(float from, float to) => StartCoroutine(CardScaleTransition(from, to));
+
+        private IEnumerator CardScaleTransition(float from, float to)
+        {
+            transform.DOScale(from, .1f);
+            yield return new WaitForSeconds(.5f);
+            transform.DOScale(to, .5f);
+        }
+
+
 
     }
 

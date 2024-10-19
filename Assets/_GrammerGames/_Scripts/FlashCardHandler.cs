@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using DG.Tweening;
 using Lean.Common;
 using TMKOC.Grammer;
 using Unity.Mathematics;
@@ -18,7 +20,12 @@ namespace TMKOC.Grammer
 
         public GameObject wordBasket;
         public static event Action<string, Sprite, GrammerType, int> SetFlashCardData;
+
+        public static Action<string, Sprite, GrammerType, int> OnNextButtonClicked;
         public static event Action OnGameOver;
+        public static event Action<string, int> ChangeTitle;
+        public static event Action<bool> EnableCardsDragging;
+        public static event Action<bool, int, bool> ResetCollectablePos;
 
 
         private void OnEnable()
@@ -33,6 +40,8 @@ namespace TMKOC.Grammer
 
             Collectable.ShowNextCards += ShowNext;
 
+            Collector.OnRightAnswer += NextLevelQuiz;
+
         }
 
         private void OnDisable()
@@ -46,6 +55,9 @@ namespace TMKOC.Grammer
             LivesManager.ShowNextFlashCards -= NextBtnLoop;
 
             Collectable.ShowNextCards -= ShowNext;
+
+            Collector.OnRightAnswer -= NextLevelQuiz;
+
         }
 
 
@@ -120,6 +132,12 @@ namespace TMKOC.Grammer
         public int chunkIndex = 1;
         public void NextBtnLoop()
         {
+            if (chunkIndex > 5)
+            {
+                Debug.Log("test is over");
+                return;
+            }
+
             int cardCount = 0;
 
             if (GameManager.Instance.cardType == CardType.FlashCard)
@@ -141,7 +159,8 @@ namespace TMKOC.Grammer
                 for (int i = 0; i < cardCount; i++)
                 {
                     var data = chunk[i];
-                    SetFlashCardData?.Invoke(data.word, data.image, data.grammerType, i);
+                    OnNextButtonClicked?.Invoke(data.word, data.image, data.grammerType, i);
+                    //SetFlashCardData?.Invoke(data.word, data.image, data.grammerType, i);
                 }
 
                 chunkIndex++;
@@ -149,24 +168,67 @@ namespace TMKOC.Grammer
             }
             else
             {
-                Debug.Log("no more elements...");
+                GameManager.Instance.currentLevel = LevelType.Quiz;
+                SetActiveWordBasket(true);
+                EnableCardsDragging?.Invoke(true);
+                ChangeTitle?.Invoke("Which Word is a Noun ?", 1200);
+                Debug.Log("<color=yellow> no more elements...Now we take test...</color>");
+                //assign data to the falsh cards...
+
+                var chunk = GetLevelTestCards();
+
+                //assign data to the falsh cards...
+                for (int i = 0; i < cardCount; i++)
+                {
+                    var data = chunk[i];
+                    OnNextButtonClicked?.Invoke(data.word, data.image, data.grammerType, i);
+
+                  //  SetFlashCardData?.Invoke(data.word, data.image, data.grammerType, i);
+                }
+
+                chunkIndex++;
             }
 
         }
 
 
-
-        private void SetQuizCardsDataList(FlashCardListWrapper flashCardListWrapper)   //same function but need to add randomness later on...
+        private void NextLevelQuiz(int index)
         {
-            this.flashCardListWrapper = flashCardListWrapper;
-            flashCardDatas = flashCardListWrapper.listOfFlashCards;
-
-            for (int i = 0; i < flashCards.Count; i++)
-            {
-                var data = flashCardDatas[i];
-                SetFlashCardData?.Invoke(data.word, data.image, data.grammerType, i);
-            }
+            if (GameManager.Instance.levelNumber == 6) return;
+            // PlayCardTransition?.Invoke(0, .8f);
+            ResetCollectablePos?.Invoke(false, index, false);
+            NextBtnLoop();
         }
+
+
+        [SerializeField] private List<FlashCardData> previousChunk;
+        private List<FlashCardData> GetLevelTestCards()
+        {
+            System.Random random = new System.Random();
+
+            int cardCount = flashCardDatas.Count;
+
+            var nouns = flashCardDatas;
+            var incorrectWords = GameManager.Instance.grammerTypeDataSO.incorrectWords;
+
+            var filtereedNouns = nouns.Except(previousChunk).ToList();
+            var filteredIncorrectWords = incorrectWords.Except(previousChunk).ToList();
+
+            var chunk = new List<FlashCardData>();
+
+            var a = filtereedNouns[random.Next(filtereedNouns.Count)];
+            chunk.Add(a);
+
+            var b = filteredIncorrectWords.OrderBy(x => random.Next()).Take(2).ToList();
+            chunk.AddRange(b);
+
+            chunk = chunk.OrderBy(x => random.Next()).ToList();
+
+            previousChunk = chunk;
+
+            return chunk;
+        }
+
 
         private void ResetFlashCardsIndex()
         {
@@ -180,6 +242,7 @@ namespace TMKOC.Grammer
 
         private void ShowNext()
         {
+
             GameManager.Instance.QuizGamesPlayed += 1;
             Debug.Log("<color=green>now we need to show next cards...,</color>");
             if (GameManager.Instance.QuizGamesPlayed > 5)

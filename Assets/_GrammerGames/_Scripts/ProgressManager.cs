@@ -15,7 +15,8 @@ public class ProgressManager : MonoBehaviour
     public int score;
     public float sliderValue = 0;
     public static event Action ShowNextFlashCards;
-    public static event Action<bool, int> ResetCollectablePos;
+    public static event Action<bool, int, bool> ResetCollectablePos;
+    // public static event Action ScaleUpCards;
 
 
     private void OnEnable()
@@ -55,7 +56,7 @@ public class ProgressManager : MonoBehaviour
         {
             score += maxScore / 5;
             int starIndex = GameManager.Instance.cardType == CardType.FlashCard ? score - 1 : (score / 2) - 1;
-            
+
             ScaleUpStar(starIndex);
             if (score > maxScore / 5)
             {
@@ -69,7 +70,7 @@ public class ProgressManager : MonoBehaviour
         }
         //need to invoke an event that sets new flash cards...
         // ShowNextFlashCards?.Invoke();
-        ResetCollectablePos?.Invoke(true, index);
+        ResetCollectablePos?.Invoke(true, index, true);
     }
 
 
@@ -101,6 +102,7 @@ public class ProgressManager : MonoBehaviour
     private void AddScore(float _tempScore, int index)
     {
         tempScore += _tempScore;
+
         if (IsWholeNumber(tempScore))
         {
             Debug.Log("<color=green> tempscore is whole number we can give star !!!</color>");
@@ -111,12 +113,14 @@ public class ProgressManager : MonoBehaviour
         }
         else
         {
-            ResetCollectablePos?.Invoke(false, index);
+            ResetCollectablePos?.Invoke(false, index, true);
+
             //dont show next cards...
+            //need to scale down the card...
         }
     }
 
-    public bool IsWholeNumber(float num)
+    private bool IsWholeNumber(float num)
     {
         return num % 1 == 0;
     }

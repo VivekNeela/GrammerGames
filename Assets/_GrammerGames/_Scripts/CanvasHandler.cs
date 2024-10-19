@@ -28,6 +28,7 @@ namespace TMKOC.Grammer
             GameManager.OnLoadQuiz += SetCanvas;
             GameManager.OnLoadSelection += SetCanvas;
             GameManager.OnGameOver += SetCanvas;
+            FlashCardHandler.ChangeTitle += SetTitleTextAndWidth;
         }
         private void OnDisable()
         {
@@ -35,6 +36,7 @@ namespace TMKOC.Grammer
             GameManager.OnLoadQuiz -= SetCanvas;
             GameManager.OnLoadSelection -= SetCanvas;
             GameManager.OnGameOver -= SetCanvas;
+            FlashCardHandler.ChangeTitle -= SetTitleTextAndWidth;
         }
 
 

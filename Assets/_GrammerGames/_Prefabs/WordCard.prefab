@@ -606,5 +606,6 @@ MonoBehaviour:
   grammerType: 3
   cardType: 1
   leanDragTranslate: {fileID: 8144409265903940709}
+  cardSpriteRenderer: {fileID: 6169831589507213682}
   imageSpriteRenderer: {fileID: 8103812765872102356}
   tmpText: {fileID: 3605870019789224656}

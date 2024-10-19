@@ -15,6 +15,7 @@ namespace TMKOC.Grammer
 
         public int GAME_ID;
         public LevelType currentLevel;
+        public int levelNumber;
         public GrammerType grammerType;
         public CardType cardType;
         public GrammerTypeDataSO grammerTypeDataSO;
@@ -32,6 +33,8 @@ namespace TMKOC.Grammer
         public static event Action<FlashCardListWrapper> SetQuizCardsData;
         public static event Action ResetFlashCardsIndex;
         public static event Action OnResetQuiz;
+        public static event Action<float, float> PlayCardTransition;
+
 
         private void OnEnable()
         {
@@ -54,19 +57,29 @@ namespace TMKOC.Grammer
             ResetFlashCardsIndex?.Invoke();
             OnResetQuiz?.Invoke();
             currentLevel = LevelType.Selection;
+            levelNumber = 0;
+            
+            PlayCardTransition?.Invoke(0, 0);
+
             OnLoadSelection?.Invoke(currentLevel);
             QuizGamesPlayed = 0;
+
         }
 
         public void LoadFlashCardsLevel(int level)   //this will be on the levels btn...
         {
             currentLevel = LevelType.FlashCards;
+            levelNumber = level + 1;
             OnLoadFlashCards?.Invoke(currentLevel);
             SetDraggingState?.Invoke(false);
             currentFlashCardData = grammerTypeDataSO.flashCardNestedList[level];
 
             SetFlashCardData?.Invoke(currentFlashCardData);
+
+            PlayCardTransition?.Invoke(0, .8f);
+
         }
+
 
         // public void LoadWordCardsLevel(int level)
         // {
@@ -82,6 +95,7 @@ namespace TMKOC.Grammer
         public void LoadQuiz()   //this is on the test quiz btn...
         {
             currentLevel = LevelType.Quiz;
+            levelNumber = 6;
             OnLoadQuiz?.Invoke(currentLevel);
             SetDraggingState?.Invoke(true);
 
@@ -91,10 +105,11 @@ namespace TMKOC.Grammer
                 grammerTypeDataSO.SetNestedListQuizWordCards();   //this function is for word cards
 
             currentFlashCardData = grammerTypeDataSO.flashCardNestedList[5];  //last element is quiz cards
-            
+
             SetQuizCardsData?.Invoke(currentFlashCardData);
             QuizGamesPlayed += 1;
 
+            PlayCardTransition?.Invoke(0, .8f);
         }
 
 
