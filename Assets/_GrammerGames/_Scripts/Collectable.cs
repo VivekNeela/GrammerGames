@@ -56,7 +56,9 @@ namespace TMKOC.Grammer
 
             FlashCardHandler.ResetCollectablePos += ResetCollectablePosition;
 
-            GameManager.PlayCardTransition += PlayCardTransition;
+            // GameManager.PlayCardTransition += PlayCardTransition;
+
+            GameManager.ResetCardScale += ResetCardScale;
 
             FlashCardHandler.OnNextButtonClicked += OnNextButtonClicked;
         }
@@ -72,7 +74,9 @@ namespace TMKOC.Grammer
 
             FlashCardHandler.ResetCollectablePos -= ResetCollectablePosition;
 
-            GameManager.PlayCardTransition -= PlayCardTransition;
+            // GameManager.PlayCardTransition -= PlayCardTransition;
+
+            GameManager.ResetCardScale -= ResetCardScale;
 
             FlashCardHandler.OnNextButtonClicked -= OnNextButtonClicked;
         }
@@ -124,16 +128,21 @@ namespace TMKOC.Grammer
 
         }
 
+
         private void OnNextButtonClicked(string word, Sprite image, GrammerType grammer, int _index)
         {
+            // if (_index != index) return;
             Vector3 defaultScale = transform.localScale;
-            transform.DOScale(0, 1).OnComplete(() =>
-            {
-                
-                SetFlashCardData(word, image, grammer, _index);
-                transform.DOScale(defaultScale.x, 1);
-            });
+            SetFlashCardData(word, image, grammer, _index);
+
+            //lets not do the transition here...
+
+            // transform.DOScale(0, 1).OnComplete(() =>
+            // {
+            //     transform.DOScale(defaultScale.x, 1);
+            // });
         }
+
 
         private void OnReset(bool showNext, int _index, bool destroy)
         {
@@ -152,10 +161,7 @@ namespace TMKOC.Grammer
             {
                 Debug.Log("<color=yellow> Destroy card and show Next!!! </color>");
                 ShowNextCards?.Invoke();
-                // StartCoroutine(GoNext(() =>
-                // {
-                //     ShowNextCards?.Invoke();
-                // }));
+
             }
             if (_index == index && destroy)
             {
@@ -164,21 +170,18 @@ namespace TMKOC.Grammer
 
         }
 
-        private IEnumerator GoNext(Action callback)
-        {
-            PlayCardTransition(0, 0.8f);
-            yield return new WaitForEndOfFrame();
-            callback?.Invoke();
-        }
+        //not using
 
-        private void PlayCardTransition(float from, float to) => StartCoroutine(CardScaleTransition(from, to));
+        // private void PlayCardTransition(float from, float to) => StartCoroutine(CardScaleTransition(from, to));
 
-        private IEnumerator CardScaleTransition(float from, float to)
-        {
-            transform.DOScale(from, .1f);
-            yield return new WaitForSeconds(.5f);
-            transform.DOScale(to, .5f);
-        }
+        // private IEnumerator CardScaleTransition(float from, float to)
+        // {
+        //     transform.DOScale(from, .1f);
+        //     yield return new WaitForSeconds(.5f);
+        //     transform.DOScale(to, .5f);
+        // }
+
+        private void ResetCardScale() => transform.DOScale(0, 0);
 
 
 

@@ -19,7 +19,6 @@ namespace TMKOC.Grammer
         public GrammerType grammerType;
         public CardType cardType;
         public GrammerTypeDataSO grammerTypeDataSO;
-        // public  GrammerFlashCardsSO grammerTypeDataSO;
         public FlashCardListWrapper currentFlashCardData;
         public int QuizGamesPlayed;
 
@@ -33,7 +32,12 @@ namespace TMKOC.Grammer
         public static event Action<FlashCardListWrapper> SetQuizCardsData;
         public static event Action ResetFlashCardsIndex;
         public static event Action OnResetQuiz;
-        public static event Action<float, float> PlayCardTransition;
+        // public static event Action<float, float> PlayCardTransition;
+
+        public static event Action<Action> ScaleCardsOneByOne;
+        public static event Action<Action> ScaleDownCards;
+        public static event Action ResetCardScale;
+
 
 
         private void OnEnable()
@@ -54,15 +58,22 @@ namespace TMKOC.Grammer
 
         public void LoadSelection()   //this is on back btn
         {
+            // CloudUI.Instance.PlayCloudEnterAnimation();
+            
+            // ScaleDownCards?.Invoke(() => { });   //no need to do this...
+            ResetCardScale?.Invoke();
             ResetFlashCardsIndex?.Invoke();
             OnResetQuiz?.Invoke();
             currentLevel = LevelType.Selection;
             levelNumber = 0;
-            
-            PlayCardTransition?.Invoke(0, 0);
+
+            // PlayCardTransition?.Invoke(0, 0);
+
 
             OnLoadSelection?.Invoke(currentLevel);
             QuizGamesPlayed = 0;
+
+            //bring clouds...
 
         }
 
@@ -76,7 +87,8 @@ namespace TMKOC.Grammer
 
             SetFlashCardData?.Invoke(currentFlashCardData);
 
-            PlayCardTransition?.Invoke(0, .8f);
+            // PlayCardTransition?.Invoke(0, .8f);
+            ScaleCardsOneByOne?.Invoke(() => { });
 
         }
 
@@ -94,6 +106,7 @@ namespace TMKOC.Grammer
 
         public void LoadQuiz()   //this is on the test quiz btn...
         {
+
             currentLevel = LevelType.Quiz;
             levelNumber = 6;
             OnLoadQuiz?.Invoke(currentLevel);
@@ -109,7 +122,8 @@ namespace TMKOC.Grammer
             SetQuizCardsData?.Invoke(currentFlashCardData);
             QuizGamesPlayed += 1;
 
-            PlayCardTransition?.Invoke(0, .8f);
+            // PlayCardTransition?.Invoke(0, .8f);
+            ScaleCardsOneByOne?.Invoke(() => { });
         }
 
 

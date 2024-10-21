@@ -4,8 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
 using Lean.Common;
+using Sirenix.OdinInspector;
 using TMKOC.Grammer;
 using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
 namespace TMKOC.Grammer
 {
@@ -13,12 +15,13 @@ namespace TMKOC.Grammer
     public class FlashCardHandler : MonoBehaviour
     {
         //this flash card list wrapper is not being used anywhere can remove later...
-        private FlashCardListWrapper flashCardListWrapper;   //this will set all the flash cards data
+        private FlashCardListWrapper flashCardListWrapper;
         public List<FlashCardData> flashCardDatas;
         public List<Collectable> flashCards;
         public List<Collectable> wordCards;
 
         public GameObject wordBasket;
+        public GameObject levelConfetti;
         public static event Action<string, Sprite, GrammerType, int> SetFlashCardData;
 
         public static Action<string, Sprite, GrammerType, int> OnNextButtonClicked;
@@ -26,6 +29,8 @@ namespace TMKOC.Grammer
         public static event Action<string, int> ChangeTitle;
         public static event Action<bool> EnableCardsDragging;
         public static event Action<bool, int, bool> ResetCollectablePos;
+        public static event Action<bool> SetNextBtnState;
+        public static event Action<Action> ScaleCardsDownToUp;   //crazy shit...
 
 
         private void OnEnable()
@@ -128,77 +133,94 @@ namespace TMKOC.Grammer
 
 
 
-
         public int chunkIndex = 1;
         public void NextBtnLoop()
         {
+            if (TransitionHandler.Instance.inTransition) return;
+
             if (chunkIndex > 5)
             {
                 Debug.Log("test is over");
+                levelConfetti.SetActive(true);
                 return;
             }
 
-            int cardCount = 0;
-
-            if (GameManager.Instance.cardType == CardType.FlashCard)
-                cardCount = 3;
-            else
-                cardCount = 5;
-
-
-            int startIndex = chunkIndex * cardCount;
-
-            if (startIndex < flashCardDatas.Count)
+            //scale down all cards
+            ScaleCardsDownToUp?.Invoke(() =>
             {
 
-                var chunk = flashCardDatas.GetRange(startIndex, Mathf.Min(cardCount, flashCardDatas.Count - startIndex));
 
-                Debug.Log("chunk data is :: " + chunk[0].word);
+                int cardCount = 0;
 
-                //assign data to the falsh cards...
-                for (int i = 0; i < cardCount; i++)
+                cardCount = GameManager.Instance.cardType == CardType.FlashCard ? 3 : 5;
+
+                int startIndex = chunkIndex * cardCount;
+
+                if (startIndex < flashCardDatas.Count)
                 {
-                    var data = chunk[i];
-                    OnNextButtonClicked?.Invoke(data.word, data.image, data.grammerType, i);
-                    //SetFlashCardData?.Invoke(data.word, data.image, data.grammerType, i);
+
+                    var chunk = flashCardDatas.GetRange(startIndex, Mathf.Min(cardCount, flashCardDatas.Count - startIndex));
+
+                    Debug.Log("chunk data is :: " + chunk[0].word);
+
+                    //assign data to the falsh cards...
+                    for (int i = 0; i < cardCount; i++)
+                    {
+                        var data = chunk[i];
+                        OnNextButtonClicked?.Invoke(data.word, data.image, data.grammerType, i);
+
+                        //SetFlashCardData?.Invoke(data.word, data.image, data.grammerType, i);
+                    }
+
+                    chunkIndex++;
+
+                }
+                else
+                {
+                    GameManager.Instance.currentLevel = LevelType.Quiz;
+                    //play confetti 
+                    // levelConfetti.SetActive(true);
+                    SetActiveWordBasket(true);
+                    EnableCardsDragging?.Invoke(true);
+                    ChangeTitle?.Invoke("Which Word is a Noun ?", 1200);
+                    Debug.Log("<color=yellow> no more elements...Now we take test...</color>");
+                    SetNextBtnState?.Invoke(false);
+
+                    //assign data to the falsh cards...
+
+                    var chunk = GetLevelTestCards();
+
+                    //assign data to the falsh cards...
+                    for (int i = 0; i < cardCount; i++)
+                    {
+                        var data = chunk[i];
+                        OnNextButtonClicked?.Invoke(data.word, data.image, data.grammerType, i);
+
+                        //  SetFlashCardData?.Invoke(data.word, data.image, data.grammerType, i);
+                    }
+
+                    chunkIndex++;
                 }
 
-                chunkIndex++;
 
-            }
-            else
-            {
-                GameManager.Instance.currentLevel = LevelType.Quiz;
-                SetActiveWordBasket(true);
-                EnableCardsDragging?.Invoke(true);
-                ChangeTitle?.Invoke("Which Word is a Noun ?", 1200);
-                Debug.Log("<color=yellow> no more elements...Now we take test...</color>");
-                //assign data to the falsh cards...
+            });  //should happen before the cards data has changed
 
-                var chunk = GetLevelTestCards();
-
-                //assign data to the falsh cards...
-                for (int i = 0; i < cardCount; i++)
-                {
-                    var data = chunk[i];
-                    OnNextButtonClicked?.Invoke(data.word, data.image, data.grammerType, i);
-
-                  //  SetFlashCardData?.Invoke(data.word, data.image, data.grammerType, i);
-                }
-
-                chunkIndex++;
-            }
 
         }
 
 
-        private void NextLevelQuiz(int index)
+        private void NextLevelQuiz(int index)   //this runs on the progress manager on right answer event
         {
             if (GameManager.Instance.levelNumber == 6) return;
             // PlayCardTransition?.Invoke(0, .8f);
             ResetCollectablePos?.Invoke(false, index, false);
             NextBtnLoop();
         }
+
+
+
+
+
 
 
         [SerializeField] private List<FlashCardData> previousChunk;
@@ -253,7 +275,6 @@ namespace TMKOC.Grammer
             }
             NextBtnLoop();
         }
-
 
 
 

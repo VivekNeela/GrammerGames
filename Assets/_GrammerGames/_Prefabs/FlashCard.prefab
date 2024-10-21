@@ -446,7 +446,7 @@ GameObject:
   - component: {fileID: 3122104630559567140}
   - component: {fileID: 4545511007775579683}
   - component: {fileID: 847050314037436838}
-  - component: {fileID: 4309421039564725085}
+  - component: {fileID: 8696366240576452490}
   m_Layer: 0
   m_Name: FlashCard
   m_TagString: Untagged
@@ -594,7 +594,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 4
+  m_Constraints: 0
 --- !u!114 &5403074072963431852
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -719,7 +719,7 @@ MonoBehaviour:
   cardSpriteRenderer: {fileID: 0}
   imageSpriteRenderer: {fileID: 4518907106444258673}
   tmpText: {fileID: 3343705693789991219}
---- !u!114 &4309421039564725085
+--- !u!114 &8696366240576452490
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -798,12 +798,12 @@ MonoBehaviour:
   isFrom: 0
   isIndependentUpdate: 0
   autoKill: 1
-  autoGenerate: 0
+  autoGenerate: 1
   isActive: 1
-  isValid: 1
-  target: {fileID: 8494664627674645057}
-  animationType: 2
-  targetType: 11
+  isValid: 0
+  target: {fileID: 5753432253853813879}
+  animationType: 0
+  targetType: 9
   forcedTargetType: 0
   autoPlay: 1
   useTargetAsV3: 0

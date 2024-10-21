@@ -19,6 +19,7 @@ namespace TMKOC.Grammer
         public GameObject progressBar;
         public GameObject nextBtn;
         public GameObject wordBasket;
+        public GameObject levelConfetti;
 
 
 
@@ -29,6 +30,7 @@ namespace TMKOC.Grammer
             GameManager.OnLoadSelection += SetCanvas;
             GameManager.OnGameOver += SetCanvas;
             FlashCardHandler.ChangeTitle += SetTitleTextAndWidth;
+            FlashCardHandler.SetNextBtnState += SetActiveNextbtn;
         }
         private void OnDisable()
         {
@@ -49,6 +51,7 @@ namespace TMKOC.Grammer
                     // SetActiveFlashCards(false);
                     SetActiveFlashCards(GameManager.Instance.cardType, false);
                     wordBasket.SetActive(false);
+                    levelConfetti.SetActive(false);
                     break;
 
                 case LevelType.FlashCards:
@@ -57,6 +60,7 @@ namespace TMKOC.Grammer
                     SetActiveFlashCards(GameManager.Instance.cardType, true);
                     SetTitleTextAndWidth(GameManager.Instance.grammerType.ToString() + "s", 800);
                     progressBar.SetActive(false);
+                    levelConfetti.SetActive(false);
                     if (GameManager.Instance.cardType != CardType.WordCard)
                         nextBtn.SetActive(true);
                     else
@@ -112,6 +116,9 @@ namespace TMKOC.Grammer
             var size = new Vector2(width, titleBox.sizeDelta.y);
             titleBox.DOSizeDelta(size, 0);
         }
+
+
+        private void SetActiveNextbtn(bool state) => nextBtn.SetActive(state);
 
 
 
