@@ -2,8 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using Lean.Touch;
 using UnityEditor;
+using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -50,17 +52,70 @@ namespace TMKOC.Grammer
             FlashCardHandler.OnGameOver -= GameOver;
         }
 
-
         private void Start()
         {
             LoadSelection();
         }
 
+
         public void LoadSelection()   //this is on back btn
         {
-            // CloudUI.Instance.PlayCloudEnterAnimation();
-            
-            // ScaleDownCards?.Invoke(() => { });   //no need to do this...
+            if (TransitionHandler.Instance.inTransition == true) return;
+            StartCoroutine(GoSelectionScreenCoroutine());
+        }
+
+
+        public void LoadFlashCardsLevel(int level)   //this will be on the levels btn...
+        {
+            if (TransitionHandler.Instance.inTransition == true) return;
+            StartCoroutine(GoLevelCoroutine(level));
+
+            // currentLevel = LevelType.FlashCards;
+            // levelNumber = level + 1;
+            // OnLoadFlashCards?.Invoke(currentLevel);
+            // SetDraggingState?.Invoke(false);
+            // currentFlashCardData = grammerTypeDataSO.flashCardNestedList[level];
+
+            // SetFlashCardData?.Invoke(currentFlashCardData);
+
+            // // PlayCardTransition?.Invoke(0, .8f);
+            // ScaleCardsOneByOne?.Invoke(() => { });
+        }
+
+
+
+
+        public void LoadQuiz()   //this is on the test quiz btn...
+        {
+            if (TransitionHandler.Instance.inTransition == true) return;
+            StartCoroutine(GoQuizCoroutine());
+
+            // currentLevel = LevelType.Quiz;
+            // levelNumber = 6;
+            // OnLoadQuiz?.Invoke(currentLevel);
+            // SetDraggingState?.Invoke(true);
+
+            // if (cardType == CardType.FlashCard)
+            //     grammerTypeDataSO.SetNestedListQuizFlashCards();   //this function is for flash cards
+            // else
+            //     grammerTypeDataSO.SetNestedListQuizWordCards();   //this function is for word cards
+
+            // currentFlashCardData = grammerTypeDataSO.flashCardNestedList[5];  //last element is quiz cards
+
+            // SetQuizCardsData?.Invoke(currentFlashCardData);
+            // QuizGamesPlayed += 1;
+
+            // // PlayCardTransition?.Invoke(0, .8f);
+            // ScaleCardsOneByOne?.Invoke(() => { });
+        }
+
+
+
+        private IEnumerator GoSelectionScreenCoroutine()
+        {
+            CloudUI.Instance.PlayCloudEnterAnimation();
+            yield return new WaitUntil(() => { return !CloudUI.Instance.InTransition; });
+
             ResetCardScale?.Invoke();
             ResetFlashCardsIndex?.Invoke();
             OnResetQuiz?.Invoke();
@@ -69,16 +124,16 @@ namespace TMKOC.Grammer
 
             // PlayCardTransition?.Invoke(0, 0);
 
-
             OnLoadSelection?.Invoke(currentLevel);
             QuizGamesPlayed = 0;
-
-            //bring clouds...
-
         }
 
-        public void LoadFlashCardsLevel(int level)   //this will be on the levels btn...
+
+        private IEnumerator GoLevelCoroutine(int level)
         {
+            CloudUI.Instance.PlayCloudEnterAnimation();
+            yield return new WaitUntil(() => { return !CloudUI.Instance.InTransition; });
+
             currentLevel = LevelType.FlashCards;
             levelNumber = level + 1;
             OnLoadFlashCards?.Invoke(currentLevel);
@@ -89,23 +144,13 @@ namespace TMKOC.Grammer
 
             // PlayCardTransition?.Invoke(0, .8f);
             ScaleCardsOneByOne?.Invoke(() => { });
-
         }
 
 
-        // public void LoadWordCardsLevel(int level)
-        // {
-        //     currentLevel = LevelType.FlashCards;
-        //     OnLoadFlashCards?.Invoke(currentLevel);
-        //     SetDraggingState?.Invoke(false);
-        //     currentFlashCardData=grammerTypeDataSO.flashCardNestedList[level];
-
-        //     SetWordCardData?.Invoke(currentFlashCardData);
-        // }
-
-
-        public void LoadQuiz()   //this is on the test quiz btn...
+        private IEnumerator GoQuizCoroutine()
         {
+            CloudUI.Instance.PlayCloudEnterAnimation();
+            yield return new WaitUntil(() => { return !CloudUI.Instance.InTransition; });
 
             currentLevel = LevelType.Quiz;
             levelNumber = 6;
@@ -124,6 +169,7 @@ namespace TMKOC.Grammer
 
             // PlayCardTransition?.Invoke(0, .8f);
             ScaleCardsOneByOne?.Invoke(() => { });
+
         }
 
 
@@ -134,7 +180,6 @@ namespace TMKOC.Grammer
             OnGameOver?.Invoke(currentLevel);
             QuizGamesPlayed = 0;
         }
-
 
     }
 

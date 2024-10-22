@@ -7,6 +7,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.UIElements;
 
 
 namespace TMKOC.Grammer
@@ -51,6 +52,9 @@ namespace TMKOC.Grammer
             GameManager.SetDraggingState += SetLeanDragState;
             FlashCardHandler.SetFlashCardData += SetFlashCardData;
             ProgressManager.ResetCollectablePos += ResetCollectablePosition;
+
+            ProgressBarNew.ResetCollectablePos += ResetCollectablePosition;   //new progress bar handler
+
             LivesManager.ResetCollectablePos += ResetCollectablePosition;
             FlashCardHandler.EnableCardsDragging += SetLeanDragState;
 
@@ -69,6 +73,9 @@ namespace TMKOC.Grammer
             GameManager.SetDraggingState -= SetLeanDragState;
             FlashCardHandler.SetFlashCardData -= SetFlashCardData;
             ProgressManager.ResetCollectablePos -= ResetCollectablePosition;
+            
+            ProgressBarNew.ResetCollectablePos -= ResetCollectablePosition;   //new progress bar handler
+
             LivesManager.ResetCollectablePos -= ResetCollectablePosition;
             FlashCardHandler.EnableCardsDragging -= SetLeanDragState;
 
@@ -132,7 +139,7 @@ namespace TMKOC.Grammer
         private void OnNextButtonClicked(string word, Sprite image, GrammerType grammer, int _index)
         {
             // if (_index != index) return;
-            Vector3 defaultScale = transform.localScale;
+            // Vector3 defaultScale = transform.localScale;
             SetFlashCardData(word, image, grammer, _index);
 
             //lets not do the transition here...
@@ -148,7 +155,7 @@ namespace TMKOC.Grammer
         {
             // if (gameObject.activeSelf && showNext)
             //     PlayCardTransition(0, 0.8f);
-
+            cardSpriteRenderer.color = Color.white;
             // Debug.Log("<color=yellow>card pos was reset...</color>");
             if (GameManager.Instance.currentLevel == LevelType.Quiz)
                 SetLeanDragState(true);
@@ -166,6 +173,7 @@ namespace TMKOC.Grammer
             if (_index == index && destroy)
             {
                 Debug.Log("<color=yellow> Destroy card!!! </color>");
+                cardSpriteRenderer.color = Color.green;
             }
 
         }
@@ -181,7 +189,7 @@ namespace TMKOC.Grammer
         //     transform.DOScale(to, .5f);
         // }
 
-        private void ResetCardScale() => transform.DOScale(0, 0);
+        private void ResetCardScale() => transform.localScale = Vector3.zero;
 
 
 

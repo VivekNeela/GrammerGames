@@ -591,7 +591,9 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  m_ShouldDestroyOnLoad: 0
+  m_ShouldDestroyOnLoad: 1
+  inTransition: 0
+  targetScale: 0.8
   flashCards:
   - {fileID: 1199951704}
   - {fileID: 1518044822}
@@ -2517,7 +2519,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1214477194}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -8342,7 +8344,7 @@ MonoBehaviour:
   _width: 100
   _height: 100
   _angle: 45
-  _length: 0
+  _length: 1663.1747
   _fitRect: 1
   _emitOnSurface: 1
   _emitterThickness: 0

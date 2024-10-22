@@ -112,9 +112,15 @@ namespace TMKOC.Grammer
 
         private void SetTitleTextAndWidth(string titleText, int width)
         {
-            titleBox.GetComponentInChildren<TextMeshProUGUI>().text = titleText;
-            var size = new Vector2(width, titleBox.sizeDelta.y);
-            titleBox.DOSizeDelta(size, 0);
+            if (titleBox.GetComponentInChildren<TextMeshProUGUI>().text == titleText) return;   //if text is already the same return...
+            titleBox.transform.DOScale(0, .5f).OnComplete(() =>
+            {
+                titleBox.GetComponentInChildren<TextMeshProUGUI>().text = titleText;
+                var size = new Vector2(width, titleBox.sizeDelta.y);
+                titleBox.DOSizeDelta(size, 0);
+                //scale up again... 
+                titleBox.transform.DOScale(1, .5f);
+            });
         }
 
 

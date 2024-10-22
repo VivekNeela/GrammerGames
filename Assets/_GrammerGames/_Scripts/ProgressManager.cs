@@ -113,6 +113,8 @@ public class ProgressManager : MonoBehaviour
         }
         else
         {
+            // StartCoroutine(IncreaseSliderValue(sliderValue, .5f));
+            // sliderValue += .125f;
             ResetCollectablePos?.Invoke(false, index, true);
 
             //dont show next cards...

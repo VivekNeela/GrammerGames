@@ -9,7 +9,10 @@ namespace TMKOC.Grammer
 {
     public class CloudUI : SerializedSingleton<CloudUI>
     {
+        [SerializeField] private bool inTransition;
+        public bool InTransition { get => inTransition; set => inTransition = value; }
         [SerializeField] private Animator m_Animator;
+
 
         protected override void Awake()
         {
@@ -20,7 +23,8 @@ namespace TMKOC.Grammer
         public void OnCloudAnimationFinished()   //this function is on the animation as a key (animation event)
         {
             Debug.Log("animation is over::");
-            GameManager.Instance.LoadSelection();
+            // GameManager.Instance.LoadSelection();
+            InTransition = false;
         }
 
         public void OnAnimationDone(Action callback)
@@ -33,12 +37,14 @@ namespace TMKOC.Grammer
         [Button]
         public void PlayCloudEnterAnimation()
         {
+            InTransition = true;
             m_Animator.SetTrigger("entry");
         }
 
-        [Button]
+        
         public void PlayCloudExitAnimation()
         {
+            InTransition = false;
             m_Animator.SetTrigger("exit");
 
         }

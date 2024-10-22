@@ -33,10 +33,11 @@ namespace TMKOC.Grammer
             {
                 Debug.Log("<color=yellow> Right answer !!! </color>");
 
-                if (collectable.cardType == CardType.FlashCard)
-                    OnRightAnswer?.Invoke(collectable.Index);
-                else
-                    AddPoints?.Invoke(.5f, collectable.Index);
+                OnRightAnswer?.Invoke(collectable.Index);
+                // if (collectable.cardType == CardType.FlashCard)
+                //     OnRightAnswer?.Invoke(collectable.Index);
+                // else
+                //     AddPoints?.Invoke(.5f, collectable.Index);
 
 
             }
