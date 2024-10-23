@@ -42,10 +42,10 @@ public class ProgressBarNew : MonoBehaviour
         {
             score += 1;
 
-            if (score % 2 != 0)
+            if (score % 2 == 0)
             {
                 Debug.Log("scale up the star...");
-                index = score == 1 ? 0 : (score / 2);
+                index = score == 1 ? 0 : (score / 2) - 1;
 
                 ScaleUpStar(index);
             }
@@ -59,13 +59,19 @@ public class ProgressBarNew : MonoBehaviour
             {
                 sliderValue += .125f;
             }
+
+            if (score % 2 != 0)
+                ResetCollectablePos?.Invoke(false, index, true);
+            else
+                ResetCollectablePos?.Invoke(true, index, true);
+
         }
         //need to invoke an event that sets new flash cards...
         // ShowNextFlashCards?.Invoke();
 
         //if score is odd only the we can keep the first bool true...
         //do tmrw
-        ResetCollectablePos?.Invoke(true, index, true);
+
     }
 
 
