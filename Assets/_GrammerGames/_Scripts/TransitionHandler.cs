@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using TMKOC.Grammer;
-using UnityEditorInternal;
 using UnityEngine;
 
 public class TransitionHandler : SerializedSingleton<TransitionHandler>

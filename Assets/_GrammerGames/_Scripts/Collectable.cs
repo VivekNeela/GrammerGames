@@ -73,7 +73,7 @@ namespace TMKOC.Grammer
             GameManager.SetDraggingState -= SetLeanDragState;
             FlashCardHandler.SetFlashCardData -= SetFlashCardData;
             ProgressManager.ResetCollectablePos -= ResetCollectablePosition;
-            
+
             ProgressBarNew.ResetCollectablePos -= ResetCollectablePosition;   //new progress bar handler
 
             LivesManager.ResetCollectablePos -= ResetCollectablePosition;
@@ -155,8 +155,11 @@ namespace TMKOC.Grammer
         {
             // if (gameObject.activeSelf && showNext)
             //     PlayCardTransition(0, 0.8f);
-            cardSpriteRenderer.color = Color.white;
+            // cardSpriteRenderer.color = Color.white;s
             // Debug.Log("<color=yellow>card pos was reset...</color>");
+
+            // SetLeanDragState(true);
+
             if (GameManager.Instance.currentLevel == LevelType.Quiz)
                 SetLeanDragState(true);
             else
@@ -173,7 +176,7 @@ namespace TMKOC.Grammer
             if (_index == index && destroy)
             {
                 Debug.Log("<color=yellow> Destroy card!!! </color>");
-                cardSpriteRenderer.color = Color.green;
+                // cardSpriteRenderer.color = Color.green;
             }
 
         }

@@ -5,7 +5,6 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Lean.Touch;
 using UnityEditor;
-using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -30,6 +29,7 @@ namespace TMKOC.Grammer
         public static event Action<LevelType> OnLoadSelection;
         public static event Action<LevelType> OnGameOver;
         public static event Action<bool> SetDraggingState;
+        public static event Action<bool> EnableCollector;
         public static event Action<FlashCardListWrapper> SetFlashCardData;
         public static event Action<FlashCardListWrapper> SetQuizCardsData;
         public static event Action ResetFlashCardsIndex;
@@ -156,6 +156,7 @@ namespace TMKOC.Grammer
             levelNumber = 6;
             OnLoadQuiz?.Invoke(currentLevel);
             SetDraggingState?.Invoke(true);
+            // EnableCollector?.Invoke(true);
 
             if (cardType == CardType.FlashCard)
                 grammerTypeDataSO.SetNestedListQuizFlashCards();   //this function is for flash cards

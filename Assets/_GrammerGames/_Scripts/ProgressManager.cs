@@ -69,7 +69,7 @@ public class ProgressManager : MonoBehaviour
             }
         }
         //need to invoke an event that sets new flash cards...
-        // ShowNextFlashCards?.Invoke();
+        ShowNextFlashCards?.Invoke();
         ResetCollectablePos?.Invoke(true, index, true);
     }
 

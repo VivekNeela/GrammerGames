@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using TMKOC.Grammer;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LivesManager : MonoBehaviour
 {
-    public List<SpriteRenderer> heartsList;
+    public List<Image> heartsList;
     public Sprite heartFull;
     public Sprite heartBg;
     public int currentLives;
@@ -15,10 +16,13 @@ public class LivesManager : MonoBehaviour
     public static event Action ShowNextFlashCards;
     public static event Action<bool, int, bool> ResetCollectablePos;
 
+
+
     private void OnEnable()
     {
         Collector.OnWrongAnswer += ReduceLife;
         GameManager.OnResetQuiz += ResetLives;
+
     }
 
     private void OnDisable()
@@ -42,7 +46,7 @@ public class LivesManager : MonoBehaviour
             heartsList[i].sprite = heartFull;
         }
         //event to go next ...
-        // ShowNextFlashCards?.Invoke();
+        ShowNextFlashCards?.Invoke();
         ResetCollectablePos?.Invoke(true, index, true);
     }
 

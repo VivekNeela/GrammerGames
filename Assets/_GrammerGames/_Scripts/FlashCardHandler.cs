@@ -6,7 +6,7 @@ using DG.Tweening;
 using Lean.Common;
 using Sirenix.OdinInspector;
 using TMKOC.Grammer;
-using Unity.Mathematics;
+// using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 namespace TMKOC.Grammer
@@ -31,6 +31,7 @@ namespace TMKOC.Grammer
         public static event Action<bool, int, bool> ResetCollectablePos;
         public static event Action<bool> SetNextBtnState;
         public static event Action<Action> ScaleCardsDownToUp;   //crazy shit...
+        // public static event Action<bool> EnableCollector;
 
 
         private void OnEnable()
@@ -142,13 +143,16 @@ namespace TMKOC.Grammer
             {
                 Debug.Log("test is over");
                 levelConfetti.SetActive(true);
+                EnableCardsDragging?.Invoke(false);   //game over so no dragging...
+                // EnableCollector?.Invoke(false);
+                GameManager.Instance.LoadSelection();
                 return;
             }
+
 
             //scale down all cards
             ScaleCardsDownToUp?.Invoke(() =>
             {
-
 
                 int cardCount = 0;
 
@@ -184,6 +188,7 @@ namespace TMKOC.Grammer
                     EnableCardsDragging?.Invoke(true);
                     ChangeTitle?.Invoke("Which Word is a Noun ?", 1200);
                     Debug.Log("<color=yellow> no more elements...Now we take test...</color>");
+                    // EnableCollector?.Invoke(true);
                     SetNextBtnState?.Invoke(false);
 
                     //assign data to the falsh cards...
@@ -213,7 +218,7 @@ namespace TMKOC.Grammer
         {
             if (GameManager.Instance.levelNumber == 6) return;
             // PlayCardTransition?.Invoke(0, .8f);
-            ResetCollectablePos?.Invoke(false, index, false);
+            ResetCollectablePos?.Invoke(true, index, true);
             NextBtnLoop();
         }
 
