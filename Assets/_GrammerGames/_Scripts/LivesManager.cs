@@ -31,9 +31,13 @@ public class LivesManager : MonoBehaviour
         GameManager.OnResetQuiz -= ResetLives;
     }
 
+    private void Start() => currentLives = 5;
+
+
 
     private void ReduceLife(int index)
     {
+        Debug.Log("reduce one life...");
         if (currentLives > 0)
             currentLives -= 1;
 
@@ -46,7 +50,7 @@ public class LivesManager : MonoBehaviour
             heartsList[i].sprite = heartFull;
         }
         //event to go next ...
-        ShowNextFlashCards?.Invoke();
+        // ShowNextFlashCards?.Invoke();
         ResetCollectablePos?.Invoke(true, index, true);
     }
 

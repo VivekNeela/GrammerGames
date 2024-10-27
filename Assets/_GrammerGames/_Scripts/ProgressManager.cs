@@ -8,8 +8,12 @@ using UnityEngine.UI;
 
 public class ProgressManager : MonoBehaviour
 {
+    public GameObject Stars_5;
+    public GameObject Stars_3;
     public Slider progressBar;
-    public List<GameObject> stars;
+    // public Slider progressBar_3;
+    public List<GameObject> stars_5_List;
+    public List<GameObject> stars_3_List;
     public int maxScore;
     [SerializeField] private float tempScore;
     public int score;
@@ -21,37 +25,43 @@ public class ProgressManager : MonoBehaviour
 
     private void OnEnable()
     {
-        Collector.OnRightAnswer += GiveStar;
-        Collector.AddPoints += AddScore;
+        Collector.OnRightAnswer += GiveStar_Quiz;
+        Collector.OnRightAnswer += GiveStar_LevelQuiz;
+
         GameManager.OnResetQuiz += ResetProgress;
 
     }
 
     private void OnDisable()
     {
-        Collector.OnRightAnswer -= GiveStar;
-        Collector.AddPoints -= AddScore;
+        Collector.OnRightAnswer -= GiveStar_Quiz;
+        Collector.OnRightAnswer -= GiveStar_LevelQuiz;
+
         GameManager.OnResetQuiz -= ResetProgress;
     }
 
     private void Start()
     {
-        progressBar = GetComponent<Slider>();
         ScaleDownStars();
         maxScore = GameManager.Instance.cardType == CardType.FlashCard ? 5 : 10;
     }
 
     private void ScaleDownStars()
     {
-        foreach (var item in stars)
+        foreach (var item in stars_5_List)
+        {
+            item.transform.DOScale(0, 0);
+        }
+        foreach (var item in stars_3_List)
         {
             item.transform.DOScale(0, 0);
         }
     }
 
     //suppose the max score is 10 we will add 2 points every time we call give star.
-    private void GiveStar(int index)
+    private void GiveStar_Quiz(int index)
     {
+        if (GameManager.Instance.currentLevel != LevelType.Quiz) return;
         if (score < maxScore)
         {
             score += maxScore / 5;
@@ -74,7 +84,38 @@ public class ProgressManager : MonoBehaviour
     }
 
 
-    private void ScaleUpStar(int index) => stars[index].transform.DOScale(1, .5f);
+
+    private void GiveStar_LevelQuiz(int index)
+    {
+        if (GameManager.Instance.currentLevel != LevelType.LevelQuiz) return;
+        if (score < 3)
+        {
+            score += 1;
+            ScaleUpStar(score - 1);
+
+            if (score > 1)
+            {
+                StartCoroutine(IncreaseSliderValue(sliderValue, .5f));
+                sliderValue += .5f;
+            }
+            else
+            {
+                sliderValue += .5f;
+            }
+        }
+
+        ShowNextFlashCards?.Invoke();
+        ResetCollectablePos?.Invoke(true, index, true);
+    }
+
+
+    private void ScaleUpStar(int index)
+    {
+        if (GameManager.Instance.currentLevel == LevelType.Quiz)
+            stars_5_List[index].transform.DOScale(1, .5f);
+        else
+            stars_3_List[index].transform.DOScale(1, .5f);
+    }
 
     IEnumerator IncreaseSliderValue(float targetValue, float duration)
     {
@@ -108,7 +149,7 @@ public class ProgressManager : MonoBehaviour
             Debug.Log("<color=green> tempscore is whole number we can give star !!!</color>");
             //dont need to invoke this event cuz it is already being invoked in give star() 
             // ResetCollectablePos?.Invoke(true, index);
-            GiveStar(index);
+            GiveStar_Quiz(index);
             //show next cards also...
         }
         else
@@ -127,6 +168,24 @@ public class ProgressManager : MonoBehaviour
         return num % 1 == 0;
     }
 
+    public void EnableStars(LevelType levelType)
+    {
+        switch (levelType)
+        {
+            case LevelType.Quiz:
+                Stars_5.SetActive(true);
+                Stars_3.SetActive(false);
+                break;
 
+            case LevelType.LevelQuiz:
+                Stars_3.SetActive(true);
+                Stars_5.SetActive(false);
+                break;
+
+            default:
+                break;
+        }
+    }
 
 }
+

@@ -13,17 +13,12 @@ namespace TMKOC.Grammer
         private BoxCollider2D boxCollider2D;
         public static event Action<int> OnRightAnswer;
         public static event Action<int> OnWrongAnswer;
-        public static event Action<float, int> AddPoints;
 
         private void OnEnable()
         {
-            // FlashCardHandler.EnableCollector += SetActiveCollider;
-            GameManager.EnableCollector += SetActiveCollider;
         }
         private void OnDisable()
         {
-            // FlashCardHandler.EnableCollector -= SetActiveCollider;
-            GameManager.EnableCollector -= SetActiveCollider;
         }
 
         private void Start()
@@ -56,7 +51,6 @@ namespace TMKOC.Grammer
             }
         }
 
-        private void SetActiveCollider(bool state) => boxCollider2D.enabled = state;
 
 
 

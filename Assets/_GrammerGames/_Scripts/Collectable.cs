@@ -49,43 +49,43 @@ namespace TMKOC.Grammer
 
         private void OnEnable()
         {
-            GameManager.SetDraggingState += SetLeanDragState;
+            // GameManager.SetDraggingState += SetLeanDragState;
             FlashCardHandler.SetFlashCardData += SetFlashCardData;
             ProgressManager.ResetCollectablePos += ResetCollectablePosition;
 
-            ProgressBarNew.ResetCollectablePos += ResetCollectablePosition;   //new progress bar handler
+            // ProgressBarNew.ResetCollectablePos += ResetCollectablePosition;   //new progress bar handler
 
             LivesManager.ResetCollectablePos += ResetCollectablePosition;
-            FlashCardHandler.EnableCardsDragging += SetLeanDragState;
+            // FlashCardHandler.EnableCardsDragging += SetLeanDragState;
 
             FlashCardHandler.ResetCollectablePos += ResetCollectablePosition;
-
-            // GameManager.PlayCardTransition += PlayCardTransition;
 
             GameManager.ResetCardScale += ResetCardScale;
 
             FlashCardHandler.OnNextButtonClicked += OnNextButtonClicked;
+
+            TransitionHandler.SetCollectableDragState += SetLeanDragState;
         }
 
 
         private void OnDisable()
         {
-            GameManager.SetDraggingState -= SetLeanDragState;
+            // GameManager.SetDraggingState -= SetLeanDragState;
             FlashCardHandler.SetFlashCardData -= SetFlashCardData;
             ProgressManager.ResetCollectablePos -= ResetCollectablePosition;
 
-            ProgressBarNew.ResetCollectablePos -= ResetCollectablePosition;   //new progress bar handler
+            // ProgressBarNew.ResetCollectablePos -= ResetCollectablePosition;   //new progress bar handler
 
             LivesManager.ResetCollectablePos -= ResetCollectablePosition;
-            FlashCardHandler.EnableCardsDragging -= SetLeanDragState;
+            // FlashCardHandler.EnableCardsDragging -= SetLeanDragState;
 
             FlashCardHandler.ResetCollectablePos -= ResetCollectablePosition;
-
-            // GameManager.PlayCardTransition -= PlayCardTransition;
 
             GameManager.ResetCardScale -= ResetCardScale;
 
             FlashCardHandler.OnNextButtonClicked -= OnNextButtonClicked;
+
+            TransitionHandler.SetCollectableDragState -= SetLeanDragState;
         }
 
         private void Awake()
@@ -160,7 +160,7 @@ namespace TMKOC.Grammer
 
             // SetLeanDragState(true);
 
-            if (GameManager.Instance.currentLevel == LevelType.Quiz)
+            if (GameManager.Instance.currentLevel == LevelType.Quiz || GameManager.Instance.currentLevel == LevelType.LevelQuiz)
                 SetLeanDragState(true);
             else
                 SetLeanDragState(false);
@@ -181,19 +181,8 @@ namespace TMKOC.Grammer
 
         }
 
-        //not using
-
-        // private void PlayCardTransition(float from, float to) => StartCoroutine(CardScaleTransition(from, to));
-
-        // private IEnumerator CardScaleTransition(float from, float to)
-        // {
-        //     transform.DOScale(from, .1f);
-        //     yield return new WaitForSeconds(.5f);
-        //     transform.DOScale(to, .5f);
-        // }
-
+      
         private void ResetCardScale() => transform.localScale = Vector3.zero;
-
 
 
     }

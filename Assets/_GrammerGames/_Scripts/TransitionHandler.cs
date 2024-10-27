@@ -10,6 +10,7 @@ public class TransitionHandler : SerializedSingleton<TransitionHandler>
     public bool inTransition;
     public float targetScale;
     public List<GameObject> flashCards;
+    public static event Action<bool> SetCollectableDragState;
 
 
     private void OnEnable()
@@ -31,6 +32,7 @@ public class TransitionHandler : SerializedSingleton<TransitionHandler>
     {
         Sequence sequence = DOTween.Sequence();
         inTransition = true;
+        SetCollectableDragState?.Invoke(!inTransition);   //disables dragging for collectables when in transition
         foreach (var item in flashCards)
         {
             sequence.Append(item.transform.DOScale(targetScale, .5f).SetEase(Ease.InOutQuad)).OnComplete(() =>
@@ -38,6 +40,7 @@ public class TransitionHandler : SerializedSingleton<TransitionHandler>
                 Debug.Log("all are cards scaled::");
                 callback?.Invoke();
                 inTransition = false;
+                SetCollectableDragState?.Invoke(!inTransition);
             });
         }
 
@@ -104,10 +107,15 @@ public class TransitionHandler : SerializedSingleton<TransitionHandler>
     private void ScaleCardsDownToUp(Action setCardsCallback)
     {
         inTransition = true;
+        SetCollectableDragState?.Invoke(!inTransition);  //sets collectable dragging state when in transition...
         ScaleDownCards(() =>
         {
             setCardsCallback?.Invoke();
-            ScaleCardsOneByOne(() => { inTransition = false; });
+            ScaleCardsOneByOne(() =>
+            {
+                inTransition = false;
+                SetCollectableDragState?.Invoke(!inTransition);
+            });
         });
 
     }

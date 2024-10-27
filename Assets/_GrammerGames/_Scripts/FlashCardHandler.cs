@@ -21,13 +21,14 @@ namespace TMKOC.Grammer
         public List<Collectable> wordCards;
 
         public GameObject wordBasket;
+        public GameObject progressBar;
         public GameObject levelConfetti;
         public static event Action<string, Sprite, GrammerType, int> SetFlashCardData;
 
         public static Action<string, Sprite, GrammerType, int> OnNextButtonClicked;
         public static event Action OnGameOver;
         public static event Action<string, int> ChangeTitle;
-        public static event Action<bool> EnableCardsDragging;
+        // public static event Action<bool> EnableCardsDragging;
         public static event Action<bool, int, bool> ResetCollectablePos;
         public static event Action<bool> SetNextBtnState;
         public static event Action<Action> ScaleCardsDownToUp;   //crazy shit...
@@ -41,12 +42,13 @@ namespace TMKOC.Grammer
             GameManager.SetFlashCardData += SetFlashCardDataList;
             GameManager.SetQuizCardsData += SetFlashCardDataList;
             GameManager.ResetFlashCardsIndex += ResetFlashCardsIndex;
+
             ProgressManager.ShowNextFlashCards += NextBtnLoop;
             LivesManager.ShowNextFlashCards += NextBtnLoop;
 
             Collectable.ShowNextCards += ShowNext;
 
-            Collector.OnRightAnswer += NextLevelQuiz;
+            // Collector.OnRightAnswer += NextLevelQuiz;
 
         }
 
@@ -57,12 +59,13 @@ namespace TMKOC.Grammer
             GameManager.SetFlashCardData -= SetFlashCardDataList;
             GameManager.SetQuizCardsData -= SetFlashCardDataList;
             GameManager.ResetFlashCardsIndex -= ResetFlashCardsIndex;
+
             ProgressManager.ShowNextFlashCards -= NextBtnLoop;
             LivesManager.ShowNextFlashCards -= NextBtnLoop;
 
             Collectable.ShowNextCards -= ShowNext;
 
-            Collector.OnRightAnswer -= NextLevelQuiz;
+            // Collector.OnRightAnswer -= NextLevelQuiz;
 
         }
 
@@ -107,6 +110,7 @@ namespace TMKOC.Grammer
         }
 
         private void SetActiveWordBasket(bool state) => wordBasket.SetActive(state);
+        private void SetActiveProgressBar(bool state) => progressBar.SetActive(state);
 
         private void SetFlashCardDataList(FlashCardListWrapper flashCardListWrapper)
         {
@@ -139,13 +143,29 @@ namespace TMKOC.Grammer
         {
             if (TransitionHandler.Instance.inTransition) return;
 
+            // if (GameManager.Instance.levelNumber == 6 && chunkIndex > 4)
+            // {
+            //     TestOver();
+            // }
+
+            if (GameManager.Instance.levelNumber >= 4 && GameManager.Instance.levelNumber <= 6 && chunkIndex > 4)
+            {
+                TestOver();
+            }
+
             if (chunkIndex > 5)
             {
-                Debug.Log("test is over");
+                TestOver();
+            }
+
+            void TestOver()
+            {
+                Debug.Log("Test is over");
                 levelConfetti.SetActive(true);
-                EnableCardsDragging?.Invoke(false);   //game over so no dragging...
-                // EnableCollector?.Invoke(false);
-                GameManager.Instance.LoadSelection();
+                // EnableCardsDragging?.Invoke(false);   //game over so no dragging...
+                
+                if (GameManager.Instance.levelNumber != 6)
+                    GameManager.Instance.LoadSelection();
                 return;
             }
 
@@ -181,13 +201,20 @@ namespace TMKOC.Grammer
                 }
                 else
                 {
-                    GameManager.Instance.currentLevel = LevelType.Quiz;
+                    GameManager.Instance.currentLevel = LevelType.LevelQuiz;
                     //play confetti 
                     // levelConfetti.SetActive(true);
+
                     SetActiveWordBasket(true);
-                    EnableCardsDragging?.Invoke(true);
+                    SetActiveProgressBar(true);
+
+                    var pm = progressBar.GetComponent<ProgressManager>();
+                    pm.EnableStars(LevelType.LevelQuiz);
+
+                    // EnableCardsDragging?.Invoke(true);
                     ChangeTitle?.Invoke("Which Word is a Noun ?", 1200);
                     Debug.Log("<color=yellow> no more elements...Now we take test...</color>");
+
                     // EnableCollector?.Invoke(true);
                     SetNextBtnState?.Invoke(false);
 
@@ -214,14 +241,13 @@ namespace TMKOC.Grammer
         }
 
 
-        private void NextLevelQuiz(int index)   //this runs on the progress manager on right answer event
-        {
-            if (GameManager.Instance.levelNumber == 6) return;
-            // PlayCardTransition?.Invoke(0, .8f);
-            ResetCollectablePos?.Invoke(true, index, true);
-            NextBtnLoop();
-        }
-
+        // private void NextLevelQuiz(int index)   //this runs on the progress manager on right answer event
+        // {
+        //     if (GameManager.Instance.levelNumber == 6) return;
+        //     // PlayCardTransition?.Invoke(0, .8f);
+        //     ResetCollectablePos?.Invoke(true, index, true);
+        //     NextBtnLoop();
+        // }
 
 
 
@@ -275,7 +301,7 @@ namespace TMKOC.Grammer
             if (GameManager.Instance.QuizGamesPlayed > 5)
             {
                 Debug.Log("Game Over ! ");
-                OnGameOver?.Invoke();
+                OnGameOver?.Invoke();  //resets the quiz games played to zero...
                 return;
             }
             NextBtnLoop();

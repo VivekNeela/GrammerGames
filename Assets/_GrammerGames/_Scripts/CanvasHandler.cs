@@ -59,7 +59,11 @@ namespace TMKOC.Grammer
                     // SetActiveFlashCards(true);
                     SetActiveFlashCards(GameManager.Instance.cardType, true);
                     SetTitleTextAndWidth(GameManager.Instance.grammerType.ToString() + "s", 800);
+
+                    //3 stars progressbar...
+                    EnableProgressBar(LevelType.LevelQuiz);
                     progressBar.SetActive(false);
+
                     levelConfetti.SetActive(false);
                     if (GameManager.Instance.cardType != CardType.WordCard)
                         nextBtn.SetActive(true);
@@ -69,12 +73,20 @@ namespace TMKOC.Grammer
                     wordBasket.SetActive(false);
                     break;
 
+                case LevelType.LevelQuiz:
+
+                    break;
+
                 case LevelType.Quiz:
                     SetActiveCanvas(1);
                     // SetActiveFlashCards(true);
                     SetActiveFlashCards(GameManager.Instance.cardType, true);
                     SetTitleTextAndWidth("Choose the correct " + GameManager.Instance.grammerType.ToString() + "s", 1200);
+
+                    //5 stars progressbar...
+                    EnableProgressBar(LevelType.Quiz);
                     progressBar.SetActive(true);
+                    
                     nextBtn.SetActive(false);
                     wordBasket.SetActive(true);
                     break;
@@ -125,6 +137,12 @@ namespace TMKOC.Grammer
 
 
         private void SetActiveNextbtn(bool state) => nextBtn.SetActive(state);
+
+        private void EnableProgressBar(LevelType levelType)
+        {
+            var pm = progressBar.GetComponent<ProgressManager>();
+            pm.EnableStars(levelType);
+        }
 
 
 

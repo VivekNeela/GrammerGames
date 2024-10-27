@@ -28,8 +28,8 @@ namespace TMKOC.Grammer
         public static event Action<LevelType> OnLoadQuiz;
         public static event Action<LevelType> OnLoadSelection;
         public static event Action<LevelType> OnGameOver;
-        public static event Action<bool> SetDraggingState;
-        public static event Action<bool> EnableCollector;
+        // public static event Action<bool> SetDraggingState;
+        // public static event Action<bool> EnableCollector;
         public static event Action<FlashCardListWrapper> SetFlashCardData;
         public static event Action<FlashCardListWrapper> SetQuizCardsData;
         public static event Action ResetFlashCardsIndex;
@@ -137,7 +137,9 @@ namespace TMKOC.Grammer
             currentLevel = LevelType.FlashCards;
             levelNumber = level + 1;
             OnLoadFlashCards?.Invoke(currentLevel);
-            SetDraggingState?.Invoke(false);
+
+            // SetDraggingState?.Invoke(false);
+
             currentFlashCardData = grammerTypeDataSO.flashCardNestedList[level];
 
             SetFlashCardData?.Invoke(currentFlashCardData);
@@ -155,7 +157,9 @@ namespace TMKOC.Grammer
             currentLevel = LevelType.Quiz;
             levelNumber = 6;
             OnLoadQuiz?.Invoke(currentLevel);
-            SetDraggingState?.Invoke(true);
+            
+            // SetDraggingState?.Invoke(true);
+
             // EnableCollector?.Invoke(true);
 
             if (cardType == CardType.FlashCard)
@@ -178,7 +182,7 @@ namespace TMKOC.Grammer
         {
             currentLevel = LevelType.GameOver;
             OnResetQuiz?.Invoke();
-            OnGameOver?.Invoke(currentLevel);
+            OnGameOver?.Invoke(currentLevel);   //this event sets the game over canvas...
             QuizGamesPlayed = 0;
         }
 
@@ -190,6 +194,7 @@ namespace TMKOC.Grammer
     {
         Selection,
         FlashCards,
+        LevelQuiz,
         Quiz,
         GameOver,
     }
