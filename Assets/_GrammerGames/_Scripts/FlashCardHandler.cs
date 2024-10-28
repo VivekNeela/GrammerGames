@@ -15,10 +15,10 @@ namespace TMKOC.Grammer
     public class FlashCardHandler : MonoBehaviour
     {
         //this flash card list wrapper is not being used anywhere can remove later...
-        private FlashCardListWrapper flashCardListWrapper;
+        // private FlashCardListWrapper flashCardListWrapper;
         public List<FlashCardData> flashCardDatas;
         public List<Collectable> flashCards;
-        public List<Collectable> wordCards;
+        // public List<Collectable> wordCards;   //not using anymore
 
         public GameObject wordBasket;
         public GameObject progressBar;
@@ -83,10 +83,11 @@ namespace TMKOC.Grammer
         {
             Debug.Log("selected ::" + index);
 
-            if (GameManager.Instance.cardType == CardType.FlashCard)
-                SetCardsProperties(flashCards);
-            else
-                SetCardsProperties(wordCards);
+            SetCardsProperties(flashCards);
+            // if (GameManager.Instance.cardType == CardType.FlashCard)
+            //     SetCardsProperties(flashCards);
+            // else
+            //     SetCardsProperties(wordCards);
 
 
             void SetCardsProperties(List<Collectable> cardsList)
@@ -109,31 +110,46 @@ namespace TMKOC.Grammer
             // cardsMoving = false;
         }
 
-        private void SetActiveWordBasket(bool state) => wordBasket.SetActive(state);
+        private void SetActiveWordBasket(bool state)
+        {
+            wordBasket.SetActive(state);
+            // wordBasket.transform.DOScale(1, .5f).OnComplete(() =>
+            // {
+            //     wordBasket.transform.DOScale(1, .5f);
+            // });   //does not look good...
+        }
+
         private void SetActiveProgressBar(bool state) => progressBar.SetActive(state);
 
         private void SetFlashCardDataList(FlashCardListWrapper flashCardListWrapper)
         {
-            this.flashCardListWrapper = flashCardListWrapper;
+            // this.flashCardListWrapper = flashCardListWrapper;
             flashCardDatas = flashCardListWrapper.listOfFlashCards;
 
-            if (GameManager.Instance.cardType == CardType.FlashCard)
+            for (int i = 0; i < flashCards.Count; i++)
             {
-                for (int i = 0; i < flashCards.Count; i++)
-                {
-                    var data = flashCardDatas[i];
-                    SetFlashCardData?.Invoke(data.word, data.image, data.grammerType, i);
-                }
+                var data = flashCardDatas[i];
+                SetFlashCardData?.Invoke(data.word, data.image, data.grammerType, i);
+                Debug.Log("data set::" + i + "::" + data.word);
             }
-            else
-            {
-                Debug.Log("word cards selected...");
-                for (int i = 0; i < wordCards.Count; i++)
-                {
-                    var data = flashCardDatas[i];
-                    SetFlashCardData?.Invoke(data.word, data.image, data.grammerType, i);
-                }
-            }
+
+            // if (GameManager.Instance.cardType == CardType.FlashCard)
+            // {
+            //     for (int i = 0; i < flashCards.Count; i++)
+            //     {
+            //         var data = flashCardDatas[i];
+            //         SetFlashCardData?.Invoke(data.word, data.image, data.grammerType, i);
+            //     }
+            // }
+            // else
+            // {
+            //     Debug.Log("word cards selected...");
+            //     for (int i = 0; i < wordCards.Count; i++)
+            //     {
+            //         var data = flashCardDatas[i];
+            //         SetFlashCardData?.Invoke(data.word, data.image, data.grammerType, i);
+            //     }
+            // }
         }
 
 
@@ -143,10 +159,7 @@ namespace TMKOC.Grammer
         {
             if (TransitionHandler.Instance.inTransition) return;
 
-            // if (GameManager.Instance.levelNumber == 6 && chunkIndex > 4)
-            // {
-            //     TestOver();
-            // }
+           
 
             if (GameManager.Instance.levelNumber >= 4 && GameManager.Instance.levelNumber <= 6 && chunkIndex > 4)
             {
@@ -163,7 +176,7 @@ namespace TMKOC.Grammer
                 Debug.Log("Test is over");
                 levelConfetti.SetActive(true);
                 // EnableCardsDragging?.Invoke(false);   //game over so no dragging...
-                
+
                 if (GameManager.Instance.levelNumber != 6)
                     GameManager.Instance.LoadSelection();
                 return;
@@ -212,7 +225,7 @@ namespace TMKOC.Grammer
                     pm.EnableStars(LevelType.LevelQuiz);
 
                     // EnableCardsDragging?.Invoke(true);
-                    ChangeTitle?.Invoke("Which Word is a Noun ?", 1200);
+                    ChangeTitle?.Invoke("Which Word is a " + GameManager.Instance.grammerType.ToString() + "?", 1200);
                     Debug.Log("<color=yellow> no more elements...Now we take test...</color>");
 
                     // EnableCollector?.Invoke(true);
@@ -248,6 +261,11 @@ namespace TMKOC.Grammer
         //     ResetCollectablePos?.Invoke(true, index, true);
         //     NextBtnLoop();
         // }
+
+        private void NextBtnWordCards()
+        {
+
+        }
 
 
 
@@ -286,7 +304,7 @@ namespace TMKOC.Grammer
         private void ResetFlashCardsIndex()
         {
             chunkIndex = 1;
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < flashCards.Count; i++)
             {
                 flashCards[i].Index = i;
             }

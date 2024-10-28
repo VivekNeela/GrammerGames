@@ -14,7 +14,18 @@ namespace TMKOC.Grammer
     public class GameManager : SerializedSingleton<GameManager>
     {
 
+        #region playschool API
         public int GAME_ID;
+        private GameCategoryDataManager gameCategoryDataManager;
+        public GameCategoryDataManager GameCategoryDataManager { get => gameCategoryDataManager; }
+        private UpdateCategoryApiManager updateCategoryApiManager;
+        public UpdateCategoryApiManager UpdateCategoryApiManager { get => updateCategoryApiManager; }
+
+        #endregion
+
+        //yash is gay...
+
+
         public LevelType currentLevel;
         public int levelNumber;
         public GrammerType grammerType;
@@ -50,6 +61,13 @@ namespace TMKOC.Grammer
         private void OnDisable()
         {
             FlashCardHandler.OnGameOver -= GameOver;
+        }
+
+        protected override void Awake()
+        {
+            base.Awake();
+            gameCategoryDataManager = new GameCategoryDataManager(GAME_ID);
+            updateCategoryApiManager = new UpdateCategoryApiManager(GAME_ID);
         }
 
         private void Start()
@@ -142,6 +160,8 @@ namespace TMKOC.Grammer
 
             currentFlashCardData = grammerTypeDataSO.flashCardNestedList[level];
 
+            yield return new WaitForEndOfFrame();
+
             SetFlashCardData?.Invoke(currentFlashCardData);
 
             // PlayCardTransition?.Invoke(0, .8f);
@@ -157,7 +177,7 @@ namespace TMKOC.Grammer
             currentLevel = LevelType.Quiz;
             levelNumber = 6;
             OnLoadQuiz?.Invoke(currentLevel);
-            
+
             // SetDraggingState?.Invoke(true);
 
             // EnableCollector?.Invoke(true);
