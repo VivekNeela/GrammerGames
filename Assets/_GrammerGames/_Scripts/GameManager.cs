@@ -28,6 +28,7 @@ namespace TMKOC.Grammer
 
         public LevelType currentLevel;
         public int levelNumber;
+        public int currentScore;
         public GrammerType grammerType;
         public CardType cardType;
         public GrammerTypeDataSO grammerTypeDataSO;
@@ -88,16 +89,7 @@ namespace TMKOC.Grammer
             if (TransitionHandler.Instance.inTransition == true) return;
             StartCoroutine(GoLevelCoroutine(level));
 
-            // currentLevel = LevelType.FlashCards;
-            // levelNumber = level + 1;
-            // OnLoadFlashCards?.Invoke(currentLevel);
-            // SetDraggingState?.Invoke(false);
-            // currentFlashCardData = grammerTypeDataSO.flashCardNestedList[level];
-
-            // SetFlashCardData?.Invoke(currentFlashCardData);
-
-            // // PlayCardTransition?.Invoke(0, .8f);
-            // ScaleCardsOneByOne?.Invoke(() => { });
+           
         }
 
 
@@ -108,23 +100,7 @@ namespace TMKOC.Grammer
             if (TransitionHandler.Instance.inTransition == true) return;
             StartCoroutine(GoQuizCoroutine());
 
-            // currentLevel = LevelType.Quiz;
-            // levelNumber = 6;
-            // OnLoadQuiz?.Invoke(currentLevel);
-            // SetDraggingState?.Invoke(true);
-
-            // if (cardType == CardType.FlashCard)
-            //     grammerTypeDataSO.SetNestedListQuizFlashCards();   //this function is for flash cards
-            // else
-            //     grammerTypeDataSO.SetNestedListQuizWordCards();   //this function is for word cards
-
-            // currentFlashCardData = grammerTypeDataSO.flashCardNestedList[5];  //last element is quiz cards
-
-            // SetQuizCardsData?.Invoke(currentFlashCardData);
-            // QuizGamesPlayed += 1;
-
-            // // PlayCardTransition?.Invoke(0, .8f);
-            // ScaleCardsOneByOne?.Invoke(() => { });
+           
         }
 
 

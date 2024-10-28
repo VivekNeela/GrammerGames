@@ -27,16 +27,12 @@ namespace TMKOC.Grammer
             InTransition = false;
         }
 
-        public void OnAnimationDone(Action callback)
-        {
-            callback?.Invoke();
-        }
-
 
 
         [Button]
         public void PlayCloudEnterAnimation()
         {
+            Debug.Log("<color=green>playing anim...</color>");
             InTransition = true;
             m_Animator.SetTrigger("entry");
         }

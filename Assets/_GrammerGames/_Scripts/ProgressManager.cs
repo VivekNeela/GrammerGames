@@ -15,8 +15,18 @@ public class ProgressManager : MonoBehaviour
     public List<GameObject> stars_5_List;
     public List<GameObject> stars_3_List;
     public int maxScore;
-    [SerializeField] private float tempScore;
-    public int score;
+    // [SerializeField] private float tempScore;
+    private int score;
+    public int Score
+    {
+        get => score;
+        set
+        {
+            score = value;
+            GameManager.Instance.currentScore = score;
+        }
+    }
+
     public float sliderValue = 0;
     public static event Action ShowNextFlashCards;
     public static event Action<bool, int, bool> ResetCollectablePos;
@@ -62,13 +72,13 @@ public class ProgressManager : MonoBehaviour
     private void GiveStar_Quiz(int index)
     {
         if (GameManager.Instance.currentLevel != LevelType.Quiz) return;
-        if (score < maxScore)
+        if (Score < maxScore)
         {
-            score += maxScore / 5;
-            int starIndex = GameManager.Instance.cardType == CardType.FlashCard ? score - 1 : (score / 2) - 1;
+            Score += maxScore / 5;
+            int starIndex = GameManager.Instance.cardType == CardType.FlashCard ? Score - 1 : (Score / 2) - 1;
 
             ScaleUpStar(starIndex);
-            if (score > maxScore / 5)
+            if (Score > maxScore / 5)
             {
                 StartCoroutine(IncreaseSliderValue(sliderValue, .5f));
                 sliderValue += .25f;
@@ -88,12 +98,12 @@ public class ProgressManager : MonoBehaviour
     private void GiveStar_LevelQuiz(int index)
     {
         if (GameManager.Instance.currentLevel != LevelType.LevelQuiz) return;
-        if (score < 3)
+        if (Score < 3)
         {
-            score += 1;
-            ScaleUpStar(score - 1);
+            Score += 1;
+            ScaleUpStar(Score - 1);
 
-            if (score > 1)
+            if (Score > 1)
             {
                 StartCoroutine(IncreaseSliderValue(sliderValue, .5f));
                 sliderValue += .5f;
@@ -135,33 +145,33 @@ public class ProgressManager : MonoBehaviour
     private void ResetProgress()
     {
         progressBar.value = 0;
-        score = 0;
+        Score = 0;
         sliderValue = 0;
         ScaleDownStars();
     }
 
-    private void AddScore(float _tempScore, int index)
-    {
-        tempScore += _tempScore;
+    // private void AddScore(float _tempScore, int index)
+    // {
+    //     tempScore += _tempScore;
 
-        if (IsWholeNumber(tempScore))
-        {
-            Debug.Log("<color=green> tempscore is whole number we can give star !!!</color>");
-            //dont need to invoke this event cuz it is already being invoked in give star() 
-            // ResetCollectablePos?.Invoke(true, index);
-            GiveStar_Quiz(index);
-            //show next cards also...
-        }
-        else
-        {
-            // StartCoroutine(IncreaseSliderValue(sliderValue, .5f));
-            // sliderValue += .125f;
-            ResetCollectablePos?.Invoke(false, index, true);
+    //     if (IsWholeNumber(tempScore))
+    //     {
+    //         Debug.Log("<color=green> tempscore is whole number we can give star !!!</color>");
+    //         //dont need to invoke this event cuz it is already being invoked in give star() 
+    //         // ResetCollectablePos?.Invoke(true, index);
+    //         GiveStar_Quiz(index);
+    //         //show next cards also...
+    //     }
+    //     else
+    //     {
+    //         // StartCoroutine(IncreaseSliderValue(sliderValue, .5f));
+    //         // sliderValue += .125f;
+    //         ResetCollectablePos?.Invoke(false, index, true);
 
-            //dont show next cards...
-            //need to scale down the card...
-        }
-    }
+    //         //dont show next cards...
+    //         //need to scale down the card...
+    //     }
+    // }
 
     private bool IsWholeNumber(float num)
     {

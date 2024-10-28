@@ -159,16 +159,23 @@ namespace TMKOC.Grammer
         {
             if (TransitionHandler.Instance.inTransition) return;
 
-           
+            if (GameManager.Instance.cardType == CardType.WordCard)
+            {
+                NextBtnWordCards();
+                return;
+            }
+
 
             if (GameManager.Instance.levelNumber >= 4 && GameManager.Instance.levelNumber <= 6 && chunkIndex > 4)
             {
                 TestOver();
+                return;
             }
 
             if (chunkIndex > 5)
             {
                 TestOver();
+                return;
             }
 
             void TestOver()
@@ -178,7 +185,10 @@ namespace TMKOC.Grammer
                 // EnableCardsDragging?.Invoke(false);   //game over so no dragging...
 
                 if (GameManager.Instance.levelNumber != 6)
+                {
                     GameManager.Instance.LoadSelection();
+                    return;
+                }
                 return;
             }
 
@@ -212,7 +222,7 @@ namespace TMKOC.Grammer
                     chunkIndex++;
 
                 }
-                else
+                else   //level quiz...
                 {
                     GameManager.Instance.currentLevel = LevelType.LevelQuiz;
                     //play confetti 
@@ -233,7 +243,7 @@ namespace TMKOC.Grammer
 
                     //assign data to the falsh cards...
 
-                    var chunk = GetLevelTestCards();
+                    var chunk = GetLevelTestCards(2);
 
                     //assign data to the falsh cards...
                     for (int i = 0; i < cardCount; i++)
@@ -247,33 +257,85 @@ namespace TMKOC.Grammer
                     chunkIndex++;
                 }
 
-
             });  //should happen before the cards data has changed
 
-
         }
 
 
-        // private void NextLevelQuiz(int index)   //this runs on the progress manager on right answer event
-        // {
-        //     if (GameManager.Instance.levelNumber == 6) return;
-        //     // PlayCardTransition?.Invoke(0, .8f);
-        //     ResetCollectablePos?.Invoke(true, index, true);
-        //     NextBtnLoop();
-        // }
 
-        private void NextBtnWordCards()
+        [SerializeField] private List<FlashCardData> adjectivesChunk;
+        public void NextBtnWordCards()
         {
+            if (TransitionHandler.Instance.inTransition) return;
+
+            if (GameManager.Instance.levelNumber >= 4 && GameManager.Instance.levelNumber <= 6 && chunkIndex > 4)
+            {
+                TestOver();
+                return;
+            }
+
+            if (chunkIndex > 3)   //one teaching screen and 3 questions
+            {
+                TestOver();
+                return;
+            }
+
+            void TestOver()
+            {
+                Debug.Log("Test is over");
+                levelConfetti.SetActive(true);
+                // EnableCardsDragging?.Invoke(false);   //game over so no dragging...
+
+                if (GameManager.Instance.levelNumber != 6)
+                {
+                    GameManager.Instance.LoadSelection();
+                    return;
+                }
+                return;
+            }
+
+            ScaleCardsDownToUp?.Invoke(() =>
+            {
+                Debug.Log("set cards now::");
+
+                SetCardsData();
+
+            });
+
+
+            void SetCardsData()
+            {
+                //gonna set cards data here...
+                GameManager.Instance.currentLevel = LevelType.LevelQuiz;
+                SetActiveWordBasket(true);
+                SetActiveProgressBar(true);
+
+                var pm = progressBar.GetComponent<ProgressManager>();
+                pm.EnableStars(LevelType.LevelQuiz);
+
+                ChangeTitle?.Invoke("Which Word is a " + GameManager.Instance.grammerType.ToString() + "?", 1200);
+                SetNextBtnState?.Invoke(false);
+
+                var chunk = GetLevelTestCards(4);
+                adjectivesChunk = chunk;
+
+                //assign data to the falsh cards...
+                for (int i = 0; i < 5; i++)
+                {
+                    var data = chunk[i];
+                    OnNextButtonClicked?.Invoke(data.word, data.image, data.grammerType, i);
+                }
+
+                chunkIndex++;
+
+            }
 
         }
-
-
-
 
 
 
         [SerializeField] private List<FlashCardData> previousChunk;
-        private List<FlashCardData> GetLevelTestCards()
+        private List<FlashCardData> GetLevelTestCards(int incorrectSize)
         {
             System.Random random = new System.Random();
 
@@ -290,7 +352,7 @@ namespace TMKOC.Grammer
             var a = filtereedNouns[random.Next(filtereedNouns.Count)];
             chunk.Add(a);
 
-            var b = filteredIncorrectWords.OrderBy(x => random.Next()).Take(2).ToList();
+            var b = filteredIncorrectWords.OrderBy(x => random.Next()).Take(incorrectSize).ToList();
             chunk.AddRange(b);
 
             chunk = chunk.OrderBy(x => random.Next()).ToList();
@@ -299,6 +361,38 @@ namespace TMKOC.Grammer
 
             return chunk;
         }
+
+
+
+
+        // private List<FlashCardData> GetLevelTestCards_5()
+        // {
+        //     System.Random random = new System.Random();
+
+        //     int cardCount = flashCardDatas.Count;
+
+        //     var nouns = flashCardDatas;
+        //     var incorrectWords = GameManager.Instance.grammerTypeDataSO.incorrectWords;
+
+        //     var filtereedNouns = nouns.Except(previousChunk).ToList();
+        //     var filteredIncorrectWords = incorrectWords.Except(previousChunk).ToList();
+
+        //     var chunk = new List<FlashCardData>();
+
+        //     var a = filtereedNouns[random.Next(filtereedNouns.Count)];
+        //     chunk.Add(a);
+
+        //     var b = filteredIncorrectWords.OrderBy(x => random.Next()).Take(4).ToList();
+        //     chunk.AddRange(b);
+
+        //     chunk = chunk.OrderBy(x => random.Next()).ToList();
+
+        //     previousChunk = chunk;
+
+        //     return chunk;
+        // }
+
+
 
 
         private void ResetFlashCardsIndex()
@@ -313,6 +407,7 @@ namespace TMKOC.Grammer
 
         private void ShowNext()
         {
+            if (GameManager.Instance.currentLevel == LevelType.LevelQuiz && GameManager.Instance.QuizGamesPlayed > 1) return;
 
             GameManager.Instance.QuizGamesPlayed += 1;
             Debug.Log("<color=green>now we need to show next cards...,</color>");
@@ -322,15 +417,11 @@ namespace TMKOC.Grammer
                 OnGameOver?.Invoke();  //resets the quiz games played to zero...
                 return;
             }
-            NextBtnLoop();
+            if (GameManager.Instance.cardType == CardType.FlashCard)
+                NextBtnLoop();
+            else
+                NextBtnWordCards();
         }
-
-
-
-
-
-
-
 
 
 

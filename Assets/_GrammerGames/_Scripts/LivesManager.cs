@@ -50,7 +50,7 @@ public class LivesManager : MonoBehaviour
             heartsList[i].sprite = heartFull;
         }
         //event to go next ...
-        // ShowNextFlashCards?.Invoke();
+        ShowNextFlashCards?.Invoke();
         ResetCollectablePos?.Invoke(true, index, true);
     }
 
