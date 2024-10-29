@@ -69,7 +69,7 @@ namespace TMKOC.Grammer
 
                     levelConfetti.SetActive(false);
                     nextBtn.SetActive(true);
-                    
+
                     // if (GameManager.Instance.cardType != CardType.WordCard)
                     //     nextBtn.SetActive(true);
                     // else
@@ -81,7 +81,7 @@ namespace TMKOC.Grammer
                     break;
 
                 case LevelType.LevelQuiz:
-
+                    EnableWordBasket(false);
                     break;
 
                 case LevelType.Quiz:

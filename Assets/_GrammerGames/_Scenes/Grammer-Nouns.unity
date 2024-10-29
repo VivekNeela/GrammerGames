@@ -2157,6 +2157,7 @@ MonoBehaviour:
   GAME_ID: 0
   currentLevel: 0
   levelNumber: 0
+  currentScore: 0
   grammerType: 3
   cardType: 0
   grammerTypeDataSO: {fileID: 11400000, guid: 6cc0235fe4c84414394b9b4d1ad39672, type: 2}
@@ -2598,8 +2599,6 @@ MonoBehaviour:
   - {fileID: 234492352}
   - {fileID: 2003314503}
   maxScore: 0
-  tempScore: 0
-  score: 0
   sliderValue: 0
 --- !u!1 &1427676929
 GameObject:
@@ -2639,6 +2638,7 @@ MonoBehaviour:
   progressBar: {fileID: 1373163467}
   levelConfetti: {fileID: 2559037202206462411}
   chunkIndex: 1
+  adjectivesChunk: []
   previousChunk: []
 --- !u!4 &1427676931
 Transform:
@@ -4169,7 +4169,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1110298242}
         m_TargetAssemblyTypeName: TMKOC.Grammer.GameManager, Assembly-CSharp
-        m_MethodName: LoadSelection
+        m_MethodName: GoToMainMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

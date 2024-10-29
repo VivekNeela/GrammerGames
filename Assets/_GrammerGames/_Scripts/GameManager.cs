@@ -5,8 +5,10 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Lean.Touch;
 using UnityEditor;
+using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 
 namespace TMKOC.Grammer
@@ -76,6 +78,10 @@ namespace TMKOC.Grammer
             LoadSelection();
         }
 
+        public void GoToMainMenu()   //playschool main screen...
+        {
+            SceneManager.LoadScene(TMKOCPlaySchoolConstants.TMKOCPlayMainMenu);
+        }
 
         public void LoadSelection()   //this is on back btn
         {
@@ -89,10 +95,7 @@ namespace TMKOC.Grammer
             if (TransitionHandler.Instance.inTransition == true) return;
             StartCoroutine(GoLevelCoroutine(level));
 
-           
         }
-
-
 
 
         public void LoadQuiz()   //this is on the test quiz btn...
@@ -100,9 +103,7 @@ namespace TMKOC.Grammer
             if (TransitionHandler.Instance.inTransition == true) return;
             StartCoroutine(GoQuizCoroutine());
 
-           
         }
-
 
 
         private IEnumerator GoSelectionScreenCoroutine()

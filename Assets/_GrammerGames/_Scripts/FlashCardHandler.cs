@@ -9,6 +9,7 @@ using TMKOC.Grammer;
 // using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements;
 namespace TMKOC.Grammer
 {
 
@@ -69,14 +70,6 @@ namespace TMKOC.Grammer
 
         }
 
-
-        //useless...
-        // private void SetCollectableFlashCards(int index)
-        // {
-        //     flashCards[index].word = flashCardDatas[index].word;
-        //     flashCards[index].image = flashCardDatas[index].image;
-        //     flashCards[index].grammerType = flashCardDatas[index].grammerType;
-        // }
 
 
         private void SelectedCard(int index)
@@ -203,7 +196,7 @@ namespace TMKOC.Grammer
 
                 int startIndex = chunkIndex * cardCount;
 
-                if (startIndex < flashCardDatas.Count)
+                if (startIndex < flashCardDatas.Count)   //quiz...
                 {
 
                     var chunk = flashCardDatas.GetRange(startIndex, Mathf.Min(cardCount, flashCardDatas.Count - startIndex));
@@ -263,8 +256,7 @@ namespace TMKOC.Grammer
 
 
 
-        [SerializeField] private List<FlashCardData> adjectivesChunk;
-        public void NextBtnWordCards()
+        public void NextBtnWordCards()   //only runs on adjectives
         {
             if (TransitionHandler.Instance.inTransition) return;
 
@@ -274,7 +266,7 @@ namespace TMKOC.Grammer
                 return;
             }
 
-            if (chunkIndex > 3)   //one teaching screen and 3 questions
+            if (chunkIndex > 3 && (GameManager.Instance.levelNumber > 0 && GameManager.Instance.levelNumber < 6 || chunkIndex > 4))
             {
                 TestOver();
                 return;
@@ -296,14 +288,20 @@ namespace TMKOC.Grammer
 
             ScaleCardsDownToUp?.Invoke(() =>
             {
-                Debug.Log("set cards now::");
+                // Debug.Log("set cards now::");
+                int cardCount = 5;
 
-                SetCardsData();
+                int startIndex = chunkIndex * cardCount;
+
+                if (startIndex < flashCardDatas.Count)
+                    SetQuizCardsData(startIndex);
+                else
+                    SetLevelCardsData();
 
             });
 
 
-            void SetCardsData()
+            void SetLevelCardsData()
             {
                 //gonna set cards data here...
                 GameManager.Instance.currentLevel = LevelType.LevelQuiz;
@@ -317,7 +315,6 @@ namespace TMKOC.Grammer
                 SetNextBtnState?.Invoke(false);
 
                 var chunk = GetLevelTestCards(4);
-                adjectivesChunk = chunk;
 
                 //assign data to the falsh cards...
                 for (int i = 0; i < 5; i++)
@@ -327,7 +324,24 @@ namespace TMKOC.Grammer
                 }
 
                 chunkIndex++;
+            }
 
+            void SetQuizCardsData(int startIndex)
+            {
+                var chunk = flashCardDatas.GetRange(startIndex, Mathf.Min(5, flashCardDatas.Count - startIndex));
+
+                Debug.Log("chunk data is :: " + chunk[0].word);
+
+                //assign data to the falsh cards...
+                for (int i = 0; i < 5; i++)
+                {
+                    var data = chunk[i];
+                    OnNextButtonClicked?.Invoke(data.word, data.image, data.grammerType, i);
+
+                    //SetFlashCardData?.Invoke(data.word, data.image, data.grammerType, i);
+                }
+
+                chunkIndex++;
             }
 
         }
@@ -361,36 +375,6 @@ namespace TMKOC.Grammer
 
             return chunk;
         }
-
-
-
-
-        // private List<FlashCardData> GetLevelTestCards_5()
-        // {
-        //     System.Random random = new System.Random();
-
-        //     int cardCount = flashCardDatas.Count;
-
-        //     var nouns = flashCardDatas;
-        //     var incorrectWords = GameManager.Instance.grammerTypeDataSO.incorrectWords;
-
-        //     var filtereedNouns = nouns.Except(previousChunk).ToList();
-        //     var filteredIncorrectWords = incorrectWords.Except(previousChunk).ToList();
-
-        //     var chunk = new List<FlashCardData>();
-
-        //     var a = filtereedNouns[random.Next(filtereedNouns.Count)];
-        //     chunk.Add(a);
-
-        //     var b = filteredIncorrectWords.OrderBy(x => random.Next()).Take(4).ToList();
-        //     chunk.AddRange(b);
-
-        //     chunk = chunk.OrderBy(x => random.Next()).ToList();
-
-        //     previousChunk = chunk;
-
-        //     return chunk;
-        // }
 
 
 

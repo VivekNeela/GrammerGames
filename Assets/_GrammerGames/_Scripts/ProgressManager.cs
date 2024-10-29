@@ -53,7 +53,8 @@ public class ProgressManager : MonoBehaviour
     private void Start()
     {
         ScaleDownStars();
-        maxScore = GameManager.Instance.cardType == CardType.FlashCard ? 5 : 10;
+        // maxScore = GameManager.Instance.cardType == CardType.FlashCard ? 5 : 10;
+        maxScore = 5;
     }
 
     private void ScaleDownStars()
@@ -75,7 +76,8 @@ public class ProgressManager : MonoBehaviour
         if (Score < maxScore)
         {
             Score += maxScore / 5;
-            int starIndex = GameManager.Instance.cardType == CardType.FlashCard ? Score - 1 : (Score / 2) - 1;
+            // int starIndex = GameManager.Instance.cardType == CardType.FlashCard ? Score - 1 : (Score / 2) - 1;
+            int starIndex = Score - 1;
 
             ScaleUpStar(starIndex);
             if (Score > maxScore / 5)
