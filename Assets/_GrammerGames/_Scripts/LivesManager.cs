@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Serialization;
 using TMKOC.Grammer;
 using UnityEngine;
 using UnityEngine.UI;
@@ -60,6 +61,15 @@ public class LivesManager : MonoBehaviour
         foreach (var item in heartsList)
         {
             item.sprite = heartFull;
+        }
+    }
+
+
+    private void ShowLevelQuizStars(bool state)
+    {
+        for (int i = 0; i < 2; i++)
+        {
+            heartsList[i].gameObject.SetActive(false);
         }
     }
 

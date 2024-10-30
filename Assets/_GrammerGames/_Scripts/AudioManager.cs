@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMKOC.Grammer;
@@ -7,15 +8,24 @@ public class AudioManager : SerializedSingleton<AudioManager>
 {
 
     public AudioSource audioSource;
+    public SoundsDataSO soundsDataSO;
 
 
 
+    private IEnumerator Start()
+    {
+        yield return new WaitForSeconds(2);
+        PlayOnce(soundsDataSO.nounsIntroduction, () =>
+        {
+            PlayOnce(soundsDataSO.categorySelection);
+        });
+    }
 
 
 
     #region Audio Functions
 
-    public void PlayOnce(AudioClip clip)
+    public void PlayOnce(AudioClip clip, Action nextClip = null)
     {
         if (clip == null)
         {
@@ -26,6 +36,8 @@ public class AudioManager : SerializedSingleton<AudioManager>
         audioSource.clip = clip;
         audioSource.loop = false;
         audioSource.Play();
+
+        StartCoroutine(WaitForClipEnd(nextClip));
     }
 
 
@@ -46,6 +58,16 @@ public class AudioManager : SerializedSingleton<AudioManager>
     public void Stop()
     {
         audioSource.Stop();
+    }
+
+    private IEnumerator WaitForClipEnd(Action onClipEnd)
+    {
+        while (audioSource.isPlaying)
+        {
+            yield return null; // Wait for the next frame
+        }
+
+        onClipEnd?.Invoke();
     }
 
     #endregion
