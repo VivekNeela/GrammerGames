@@ -187,20 +187,28 @@ namespace TMKOC.Grammer
             int list1index = 0;
             int list2index = 0;
 
-            for (int i = 0; i < 25; i+=5)
+            for (int i = 0; i < 25; i += 5)
             {
                 // int correctWords = random.Next(2, 4);
-                int correctWords = 2;
+                int correctWords = 1;
 
                 var currentChunk = new List<FlashCardData>();
 
-                for (int j = 0; j < correctWords && list1index < correctFlashCardList.Count; j++)
+                for (int j = 0; j < correctWords && list1index < correctFlashCardList.Count; j++)   //adds correct words to chunk
                 {
                     currentChunk.Add(correctFlashCardList[list1index]);
                     list1index++;
                 }
 
-                for (int j = 0; j < (5 - correctWords) && list2index < incorrectWords.Count; j++)
+                // // Add one correct word to the chunk if available
+                // if (list1index < correctFlashCardList.Count)
+                // {
+                //     currentChunk.Add(correctFlashCardList[list1index]);
+                //     list1index++;
+                // }
+
+
+                for (int j = 0; j < (5 - correctWords) && list2index < incorrectWords.Count; j++)   //adds incorrect words to chunk
                 {
                     currentChunk.Add(incorrectWords[list2index]);
                     list2index++;
@@ -212,6 +220,31 @@ namespace TMKOC.Grammer
                 RandomQuizCards.AddRange(currentChunk);
 
             }
+
+
+            // for (int i = 0; i < 30; i += 5)   //adds only one correct word to a chunk of 5 
+            // {
+            //     var currentChunk = new List<FlashCardData>();
+
+            //     // Add one correct word to the chunk if available
+            //     if (list1index < correctFlashCardList.Count)
+            //     {
+            //         currentChunk.Add(correctFlashCardList[list1index]);
+            //         list1index++;
+            //     }
+
+            //     // Add four incorrect words to the chunk if available
+            //     for (int j = 0; j < 5 && list2index < incorrectWords.Count; j++)
+            //     {
+            //         currentChunk.Add(incorrectWords[list2index]);
+            //         list2index++;
+            //     }
+
+            //     // Shuffle the chunk of 5 elements
+            //     currentChunk = currentChunk.OrderBy(x => random.Next()).ToList();
+
+            //     RandomQuizCards.AddRange(currentChunk);
+            // }
 
         }
 

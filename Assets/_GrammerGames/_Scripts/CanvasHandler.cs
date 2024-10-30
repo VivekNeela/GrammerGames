@@ -88,7 +88,7 @@ namespace TMKOC.Grammer
                     SetActiveCanvas(1);
                     // SetActiveFlashCards(true);
                     SetActiveFlashCards(true);
-                    SetTitleTextAndWidth("Choose the correct " + GameManager.Instance.grammerType.ToString() + "s", 1200);
+                    SetTitleTextAndWidth("Choose the correct " + GameManager.Instance.grammerType.ToString(), 1200);
 
                     //5 stars progressbar...
                     EnableProgressBar(LevelType.Quiz, true);
